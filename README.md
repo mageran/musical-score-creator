@@ -28,8 +28,28 @@ in your project directory. This will start a local webserver. You can enter a UR
 http://localhost:5001/<YOUR_FIREBASE_PROJECT_ID>/us-central1/app/api/note?clef=treble&note=e&octave=5
 ```
 
-and it should display a PNG image like this: ![note image](https://file-hosting-13205.firebaseapp.com/musicalnotes/note.png).
+and it should display a PNG image like this:
 
-The url parameters should be self-explanatory.
+![note image](https://file-hosting-13205.firebaseapp.com/musicalnotes/note.png).
+
+### Url parameters
+
+The url parameters `clef`, `note`, and `octave` can be used as follows:
+
+* note: Values 'a' through 'g', can be used; in order to specify accidentals, '#' or 'b' can be appended (e.g. "cb", or "c#"). Note that "#" must be encoded using "%23" if given as url to the browser (e.g. "note=c%23").
+
+* clef: which clef to use (e.g. "clef=treble", or "clef=bass")
+
+* octave: number of octave for the note
+
+## Deploy to firebase functions
+
+... is done using the command
+
+```
+firebase deploy --only functions
+```
+
+
 
 
