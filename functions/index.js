@@ -38,19 +38,18 @@ app.get('/api/note', (req, res) => {
    * Creating a new stave
    */
   // Create a stave of width 400 at position x10, y40 on the canvas.
-  var stave = new VF.Stave(10, 10, w - 20);
-  var stave2 = new VF.Stave(10, 70, w - 20);
-  var stave3 = new VF.Stave(10, 130, w - 20);
-  var stave4 = new VF.Stave(10, 190, w - 20);
-  var stave5 = new VF.Stave(10, 250, w - 20);
+  var staves = new Array(5);
+  var counter=10;
+  for(var i=0;i<5;i++){
+	staves[i] = new VF.Stave(10, counter, w - 20);
+	staves[i].addClef(clef);
+	staves[i].setContext(context).draw();
+	counter += 60;
+  }
+
   // Add a clef and time signature.
-  stave.addClef(clef)
+  //stave.addClef(clef)
   // Set the context of the stave our previous exposed context and execute the method draw !
-  stave.setContext(context).draw();
-  stave2.setContext(context).draw();
-  stave3.setContext(context).draw();
-  stave4.setContext(context).draw();
-  stave5.setContext(context).draw();
   const drawNote = () => {
 
     if (!note) return;
@@ -84,7 +83,7 @@ app.get('/api/note', (req, res) => {
     var formatter = new VF.Formatter().joinVoices([voice]).format([voice], w - 20);
     
     // Render voice
-    voice.draw(context, stave);
+    voice.draw(context, staves[0]);
 
   }
 
