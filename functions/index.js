@@ -54,15 +54,19 @@ app.get('/api/note', (req, res) => {
   const drawNote = () => {
 
     if (!note) return;
-    if (note.length > 2) return
+    if (note.length > 3) return
 
     const noteName = note[0].toLowerCase();
-    const accidental = note[1]
-    if (NoteNames.indexOf(noteName) < 0) return;
+    const noteName2= note[1].toLowerCase();
+    const accidental = note[2]
+    if (NoteNames.indexOf(noteName) < 0 || NoteNames.indexOf(noteName2) < 0 ) return;
     var octaveNum = Number.parseInt(octave);
-    if (isNaN(octaveNum)) return
+    var octaveNum2 = Number.parseInt(octave+1);
+    if (isNaN(octaveNum) || isNaN(octaveNum2)) return
   
-    var noteObj = new VF.StaveNote({clef, keys: [`${noteName}/${octaveNum}`], duration: "1" })
+    var noteObj = new VF.StaveNote({clef, keys: [`${noteName}/${octaveNum}`], duration: "2" })
+    var noteObj2 = new VF.StaveNote({clef, keys: [`${noteName2}/${octaveNum}`], duration: "2" })
+
     if (accidental === '#' || accidental === 's') {
       noteObj.addAccidental(0, new VF.Accidental("#"))
     }
@@ -70,7 +74,7 @@ app.get('/api/note', (req, res) => {
       noteObj.addAccidental(0, new VF.Accidental("b"))
     }
     
-    var notes = [ noteObj ];
+    var notes = [ noteObj, noteObj2];
     
     // Create a voice in 4/4 and add above notes
     var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
@@ -81,6 +85,7 @@ app.get('/api/note', (req, res) => {
     
     // Render voice
     voice.draw(context, stave);
+
   }
 
   drawNote()
