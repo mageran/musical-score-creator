@@ -10,8 +10,8 @@ const Vex = require('vexflow')
 
 app.get('/api/note', (req, res) => {
   const NoteNames = 'abcdefg'
-  const width = 260;
-  const height = 260;
+  const width = 750;
+  const height = 750;
   const scaleFactor = 2.0
   const w = width/scaleFactor
   const h = height/scaleFactor
@@ -39,11 +39,18 @@ app.get('/api/note', (req, res) => {
    */
   // Create a stave of width 400 at position x10, y40 on the canvas.
   var stave = new VF.Stave(10, 10, w - 20);
+  var stave2 = new VF.Stave(10, 70, w - 20);
+  var stave3 = new VF.Stave(10, 130, w - 20);
+  var stave4 = new VF.Stave(10, 190, w - 20);
+  var stave5 = new VF.Stave(10, 250, w - 20);
   // Add a clef and time signature.
   stave.addClef(clef)
   // Set the context of the stave our previous exposed context and execute the method draw !
   stave.setContext(context).draw();
-
+  stave2.setContext(context).draw();
+  stave3.setContext(context).draw();
+  stave4.setContext(context).draw();
+  stave5.setContext(context).draw();
   const drawNote = () => {
 
     if (!note) return;
