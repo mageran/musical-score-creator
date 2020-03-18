@@ -50,22 +50,24 @@ app.get('/api/note', (req, res) => {
   // Add a clef and time signature.
   //stave.addClef(clef)
   // Set the context of the stave our previous exposed context and execute the method draw !
+
   const drawNote = () => {
 
     if (!note) return;
-    if (note.length > 3) return
-
-    const noteName = note[0].toLowerCase();
-    const noteName2= note[1].toLowerCase();
-    const accidental = note[2]
-    if (NoteNames.indexOf(noteName) < 0 || NoteNames.indexOf(noteName2) < 0 ) return;
+    const accidental = note[note.length]
+    var noteNames = new Array(note.length);
+    //var octaveNums = new Array(note.length);
     var octaveNum = Number.parseInt(octave);
-    var octaveNum2 = Number.parseInt(octave+1);
-    if (isNaN(octaveNum) || isNaN(octaveNum2)) return
-  
-    var noteObj = new VF.StaveNote({clef, keys: [`${noteName}/${octaveNum}`], duration: "2" })
-    var noteObj2 = new VF.StaveNote({clef, keys: [`${noteName2}/${octaveNum}`], duration: "2" })
+    var notes = new Array(note.length);
+    for(var i = 0;i<note.length;i++){
+	noteNames[i]= note[i].toLowerCase();
+	//if (NoteNames[i].indexOf(noteNames[i]) < 0) return;
+        //octaveNums[i] = Number.parseInt(octave.get(i));
+        //if (isNaN(octaveNums[i])) return
+	var noteObj = new VF.StaveNote({clef, keys: [`${noteNames[i]}/${octaveNum}`], duration: "2" })
+	notes[i]= noteObj;
 
+    }
     if (accidental === '#' || accidental === 's') {
       noteObj.addAccidental(0, new VF.Accidental("#"))
     }
@@ -73,17 +75,17 @@ app.get('/api/note', (req, res) => {
       noteObj.addAccidental(0, new VF.Accidental("b"))
     }
     
-    var notes = [ noteObj, noteObj2];
-    
     // Create a voice in 4/4 and add above notes
     var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+    voice.setStrict(false);
     voice.addTickables(notes);
-    
+
     // Format and justify the notes to 400 pixels.
     var formatter = new VF.Formatter().joinVoices([voice]).format([voice], w - 20);
     
     // Render voice
     voice.draw(context, staves[0]);
+
 
   }
 
