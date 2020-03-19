@@ -2,8 +2,9 @@
  
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion, BasicCard, Image, Button} = require('dialogflow-fulfillment');
- 
+const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
+//const app = dialogflow();
+
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 //exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
@@ -18,29 +19,43 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function fallback(agent) {
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);
-}
+  }
 
   function random(agent) {
       var number = Math.floor(Math.random() * 6) + 1;
       agent.add(`Here's your random number `+number);
   }
   const noteImageMap = {
-  'd': {
-    title: 'Indigo Taco',
-    text: 'Indigo Taco is a subtle bluish tone.',
-    image: {
-      url: 'https://storage.googleapis.com/material-design/publish/material_v_12/assets/0BxFyKV4eeNjDN1JRbF9ZMHZsa1k/style-color-uiapplication-palette1.png',
-      accessibilityText: 'Indigo Taco Color',
+    'd': {
+      title: 'Indigo Taco',
+      text: 'Indigo Taco is a subtle bluish tone.',
+      image: {
+        url: 'https://storage.googleapis.com/material-design/publish/material_v_12/assets/0BxFyKV4eeNjDN1JRbF9ZMHZsa1k/style-color-uiapplication-palette1.png',
+        accessibilityText: 'Indigo Taco Color',
+      },
+      display: 'WHITE',
     },
-    display: 'WHITE',
-  },
-};
+  };
   function showNote(agent){
       const noteType = 'd';
       //let conv=agent.conv();
       //var noteUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteType+'&clef=treble&octave=4';
   	  agent.add('Here is a picture of note ' + noteType);
-	  agent.add('Do you want to see another note?',new BasicCard(noteImageMap[noteType]));
+	  agent.add(new BasicCard({
+          text: 'deneme',	// a line break to be rendered in the card.                                              
+          subtitle: 'This is a subtitle',
+          title: 'Title: this is a title',
+          buttons: new Button({
+            title: 'This is a button',
+            url: 'https://assistant.google.com/',
+          }),
+          image: new Image({
+            url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
+            alt: 'Image alternate text',
+          }),
+          display: 'CROPPED',
+        
+      }));
   }
   
 
