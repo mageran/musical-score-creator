@@ -52,12 +52,31 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       }));
   }
   
+  function listenNotes(agent){
+  	var noteUrl = agent.parameters.videoType;
+    var str = 'test'+noteUrl;
+    var n = str.length;
+    var noteName = str.charAt(n-2).toLowerCase();
+    //agent.add("Okay,Try to listen carefully!");
+    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteName+'&clef=treble&octave=4';
+    agent.add(new Card({
+        
+			  title: noteName,
+              imageUrl: notePictureUrl,
+              text: 'picture of '+noteName,
+              buttonText: 'This is a button',
+              buttonUrl: 'https://assistant.google.com/'
+        
+    }));
+    agent.add('<speak> Okay,Try to listen carefully! <audio src=' + noteUrl + '></audio></speak>');
+  }
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('random',random);
   intentMap.set('Show Note',showNote);
+  intentMap.set('Listen Notes',listenNotes);
   agent.handleRequest(intentMap);
   
 });
