@@ -37,23 +37,17 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     },
   };
   function showNote(agent){
-      const noteType = 'd';
+      const noteType = agent.parameters.noteType;
       //let conv=agent.conv();
-      //var noteUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteType+'&clef=treble&octave=4';
+      var noteUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteType+'&clef=treble&octave=4';
   	  agent.add('Here is a picture of note ' + noteType);
-	  agent.add(new BasicCard({
-          text: 'deneme',	// a line break to be rendered in the card.                                              
-          subtitle: 'This is a subtitle',
-          title: 'Title: this is a title',
-          buttons: new Button({
-            title: 'This is a button',
-            url: 'https://assistant.google.com/',
-          }),
-          image: new Image({
-            url: 'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
-            alt: 'Image alternate text',
-          }),
-          display: 'CROPPED',
+	  agent.add(new Card({
+        
+			  title: noteType,
+              imageUrl: noteUrl,
+              text: 'picture of '+noteType,
+              buttonText: 'This is a button',
+              buttonUrl: 'https://assistant.google.com/'
         
       }));
   }
