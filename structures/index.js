@@ -70,6 +70,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         
     }));
     agent.add('<speak> Okay,Try to listen carefully! <audio src=' + noteUrl + '></audio></speak>');
+    
   }
   
   function createComposition(agent){
@@ -79,7 +80,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
   
   function createCompositiongetNote(agent){
-    agent.add("HelloA!");
+    //agent.add("HelloA!");
   	var noteType = agent.parameters.noteType;
     compose_1 = compose_1 + noteType;
     agent.add("compose_1 :"+compose_1);
@@ -97,8 +98,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
               buttonUrl: 'https://assistant.google.com/'
         
     }));
-    //for(var i =0;i<compose_1.length;i++)   Add every notes' short sound to cloud //nextstep 
-    	//agent.add('<speak> <audio src=' + compose_1[i] + '></audio></speak>');
+    var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
+    var pianoNote2= '4vH.wav"';
+    for(var i =0;i<compose_1.length;i++){
+    	agent.add('<speak> <audio src=' + pianoNote+ compose_1[i].toUpperCase() + pianoNote2+ '></audio></speak>');
+        agent.add('<speak>This is a sentence with a <break time="6000s"/> pause</speak>');
+      	//agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
+    }  
   }
   
   let intentMap = new Map();
