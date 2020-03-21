@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
+var compose_1 ='';
 //const app = dialogflow();
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -70,13 +71,44 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     }));
     agent.add('<speak> Okay,Try to listen carefully! <audio src=' + noteUrl + '></audio></speak>');
   }
-
+  
+  function createComposition(agent){
+    //add names in future
+  	agent.add("Okay I am ready to help! The balls in your court");
+    compose_1='';
+  }
+  
+  function createCompositiongetNote(agent){
+    agent.add("HelloA!");
+  	var noteType = agent.parameters.noteType;
+    compose_1 = compose_1 + noteType;
+    agent.add("compose_1 :"+compose_1);
+    displayBoard(agent);
+  }
+  
+  function displayBoard(agent){
+    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+    agent.add(new Card({
+        
+			  title: 'SongName',
+              imageUrl: notePictureUrl,
+              text: 'Test',
+              buttonText: 'TestButton',
+              buttonUrl: 'https://assistant.google.com/'
+        
+    }));
+    //for(var i =0;i<compose_1.length;i++)   Add every notes' short sound to cloud //nextstep 
+    	//agent.add('<speak> <audio src=' + compose_1[i] + '></audio></speak>');
+  }
+  
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('random',random);
   intentMap.set('Show Note',showNote);
   intentMap.set('Listen Notes',listenNotes);
+  intentMap.set('Create Composition',createComposition);
+  intentMap.set('Create Composition/getNote',createCompositiongetNote);
   agent.handleRequest(intentMap);
   
 });
