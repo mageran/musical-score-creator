@@ -8,13 +8,29 @@ var counter=0;
 var songPath='';
 //const app = dialogflow();
 
-process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
-//exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
-exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+  process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
+  //exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
+  exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
+ class Node{
+    constructor(data,name, next = null){
+        this.name = name;
+        this.data = data;
+        this.next = next;
+    }
+ }  
+ 
+ class LinkedList{
+    constructor(){
+        this.head = null;
+    }
+ }
+ let myMusicList = new LinkedList();
+  //in later, create an intent for create new songAlbum
+  //in later, define a function for keeping names 
   function welcome(agent) {
     agent.add(`Welcome to MusicNinja. How can I help you?`);
   }
@@ -113,6 +129,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       counter= counter+1;
     }
     agent.add('<speak>'+songPath+'</speak>');
+    myMusicList.push(songPath);
     songPath = '';
     counter=0;
   }
