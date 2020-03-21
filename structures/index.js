@@ -4,6 +4,8 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
 var compose_1 ='';
+var counter=0;
+var songPath='';
 //const app = dialogflow();
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -80,13 +82,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
   
   function createCompositiongetNote(agent){
-    //agent.add("HelloA!");
   	var noteType = agent.parameters.noteType;
     compose_1 = compose_1 + noteType;
-    agent.add("compose_1 :"+compose_1);
+    //agent.add("compose_1 :"+compose_1);
     displayBoard(agent);
   }
-  
+  function createSong(agent){
+    var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
+    var pianoNote2= '4vH.wav"';
+    songPath += '<audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio>' ;
+    //agent.add('<speak> <audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio></speak>');
+    //agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
+  }
   function displayBoard(agent){
     var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
     agent.add(new Card({
@@ -98,13 +105,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
               buttonUrl: 'https://assistant.google.com/'
         
     }));
-    var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
-    var pianoNote2= '4vH.wav"';
-    for(var i =0;i<compose_1.length;i++){
-    	agent.add('<speak> <audio src=' + pianoNote+ compose_1[i].toUpperCase() + pianoNote2+ '></audio></speak>');
-        agent.add('<speak>This is a sentence with a <break time="6000s"/> pause</speak>');
-      	//agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
-    }  
+        
+ 	for(var i = 0;i<compose_1.length;i++){
+      createSong(agent);
+      if(i<compose_1.length-2)
+        songPath += '+';
+      counter= counter+1;
+    }
+    agent.add('<speak>'+songPath+'</speak>');
+    songPath = '';
+    counter=0;
   }
   
   let intentMap = new Map();
