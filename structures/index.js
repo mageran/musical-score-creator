@@ -5,7 +5,7 @@ const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
 var compose_1 ='';
 var counter=0;
-
+var scenarioType=0;
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -30,7 +30,9 @@ var counter=0;
  }*/
  //let myMusicList = new LinkedList();
   //in later, create an intent for create new songAlbum
-  //in later, define a function for keeping names 
+  //in later, define a function for keeping names
+
+ 
   function welcome(agent) {
     agent.add(`Welcome to MusicNinja. How can I help you?`);
   }
@@ -102,13 +104,35 @@ var counter=0;
     //add names in later
     agent.add("Okay I am ready to help! The balls in your court");
     compose_1='';
+    scenarioType=1;
   }
   
-  function createCompositiongetNote(agent){
-    var noteType = agent.parameters.noteType;
-    compose_1 = compose_1 + noteType;
-    //agent.add("compose_1 :"+compose_1);
-    displayBoard(agent,compose_1);
+  function getNote(agent){
+
+    if(scenarioType==1){
+    	var noteType = agent.parameters.noteType;
+    	compose_1 = compose_1 + noteType;
+    	//agent.add("compose_1 :"+compose_1);
+    	displayBoard(agent,compose_1);
+    }
+   
+    if(scenarioType==2){
+    	var noteType = agent.parameters.noteType;
+	if(noteType==compose_1[counter] && counter<compose_1.length){
+		agent.add("Correct Choice");
+		counter++;
+	}
+	if(noteType != compose_1[counter] && counter<compose_1.length){
+		agent.add("Wrong Choice"); // ask that user wants to go learn scenario
+	}
+
+	agent.add("What is name of note: " + counter);
+
+	if(counter >= counter<compose_1.length){
+		agent.add("Super, You completed the quiz!");
+		scenarioType=0;
+	}
+    }
   }
     
   function createSongPath(agent,compose,songPath){
@@ -141,26 +165,17 @@ var counter=0;
     agent.add('<speak>'+songPath+'</speak>');
     //myMusicList.push(songPath);
     counter=0;
-
+    
   }
-/*
-  function makeQuiz(agent){
-    var level = 1; // in later..
-    var temp = '';
-    for(var i = 0;i<level;i++)
-    	temp = temp + random(agent);
-    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+temp+'&clef=treble&octave=4';
-    agent.add(new Card({
-        
-    	title: 'SongName',
-        imageUrl: notePictureUrl,
-        text: 'Test',
-        buttonText: 'TestButton',
-        buttonUrl: 'https://assistant.google.com/'
-        
-    }));
 
-*/
+  function makeQuiz(agent){
+    typeScenario=2;
+    var level = 3; // in later..
+    compose_1 = '';
+    for(var i = 0;i<level;i++)
+    	compose_1 = compose_1 + random(agent);
+    displayBoard(agent,compose);
+    agent.add("What is name of note: " + counter);
 
   }
   
@@ -171,7 +186,7 @@ var counter=0;
   intentMap.set('Show Note',showNote);
   intentMap.set('Listen Notes',listenNotes);
   intentMap.set('Create Composition',createComposition);
-  intentMap.set('Create Composition/getNote',createCompositiongetNote);
+  intentMap.set('Create Composition/getNote',getNote);
   intentMap.set('Make Quiz',makeQuiz);
   agent.handleRequest(intentMap);
   
