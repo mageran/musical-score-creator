@@ -5,7 +5,7 @@ const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
 var compose_1 ='';
 var counter=0;
-var songPath='';
+
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -15,20 +15,20 @@ var songPath='';
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
- class Node{
+ /*class Node{
     constructor(data,name, next = null){
         this.name = name;
         this.data = data;
         this.next = next;
     }
- }  
+ }*/  
  
- class LinkedList{
+ /*class LinkedList{
     constructor(){
         this.head = null;
     }
- }
- let myMusicList = new LinkedList();
+ }*/
+ //let myMusicList = new LinkedList();
   //in later, create an intent for create new songAlbum
   //in later, define a function for keeping names 
   function welcome(agent) {
@@ -41,8 +41,15 @@ var songPath='';
   }
 
   function random(agent) {
-      var number = Math.floor(Math.random() * 6) + 1;
-      agent.add(`Here's your random number `+number);
+    var rand = Math.random()*3 + 1;
+    if(rand==1)
+	return "a";
+    if(rand==2)
+	return "b";
+    if(rand==3)
+	return "c";
+    if(rand==4)
+	return "d";
   }
   const noteImageMap = {
     'd': {
@@ -72,7 +79,7 @@ var songPath='';
   }
   
   function listenNotes(agent){
-  	var noteUrl = agent.parameters.videoType;
+    var noteUrl = agent.parameters.videoType;
     var str = 'test'+noteUrl;
     var n = str.length;
     var noteName = str.charAt(n-2).toLowerCase();
@@ -92,46 +99,69 @@ var songPath='';
   }
   
   function createComposition(agent){
-    //add names in future
-  	agent.add("Okay I am ready to help! The balls in your court");
+    //add names in later
+    agent.add("Okay I am ready to help! The balls in your court");
     compose_1='';
   }
   
   function createCompositiongetNote(agent){
-  	var noteType = agent.parameters.noteType;
+    var noteType = agent.parameters.noteType;
     compose_1 = compose_1 + noteType;
     //agent.add("compose_1 :"+compose_1);
-    displayBoard(agent);
+    displayBoard(agent,compose_1);
   }
-  function createSong(agent){
+    
+  function createSongPath(agent,compose,songPath){
     var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
     var pianoNote2= '4vH.wav"';
-    songPath += '<audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio>' ;
+    songPath += '<audio src=' + pianoNote+ compose[counter].toUpperCase() + pianoNote2+ '></audio>' ;
     //agent.add('<speak> <audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio></speak>');
     //agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
+    return songPath;
   }
-  function displayBoard(agent){
-    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+    
+  function displayBoard(agent,compose){
+    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose+'&clef=treble&octave=4';
     agent.add(new Card({
         
-			  title: 'SongName',
-              imageUrl: notePictureUrl,
-              text: 'Test',
-              buttonText: 'TestButton',
-              buttonUrl: 'https://assistant.google.com/'
+    	title: 'SongName',
+        imageUrl: notePictureUrl,
+        text: 'Test',
+        buttonText: 'TestButton',
+        buttonUrl: 'https://assistant.google.com/'
         
     }));
-        
- 	for(var i = 0;i<compose_1.length;i++){
-      createSong(agent);
-      if(i<compose_1.length-2)
-        songPath += '+';
+    var songPath='';
+    for(var i = 0;i<compose.length;i++){
+      songPath = songPath + createSongPath(agent,compose,songPath);
+      if(i<compose.length-2)
+      	songPath += '+';
       counter= counter+1;
     }
     agent.add('<speak>'+songPath+'</speak>');
-    myMusicList.push(songPath);
-    songPath = '';
+    //myMusicList.push(songPath);
     counter=0;
+
+  }
+/*
+  function makeQuiz(agent){
+    var level = 1; // in later..
+    var temp = '';
+    for(var i = 0;i<level;i++)
+    	temp = temp + random(agent);
+    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+temp+'&clef=treble&octave=4';
+    agent.add(new Card({
+        
+    	title: 'SongName',
+        imageUrl: notePictureUrl,
+        text: 'Test',
+        buttonText: 'TestButton',
+        buttonUrl: 'https://assistant.google.com/'
+        
+    }));
+
+*/
+
   }
   
   let intentMap = new Map();
@@ -142,6 +172,7 @@ var songPath='';
   intentMap.set('Listen Notes',listenNotes);
   intentMap.set('Create Composition',createComposition);
   intentMap.set('Create Composition/getNote',createCompositiongetNote);
+  intentMap.set('Make Quiz',makeQuiz);
   agent.handleRequest(intentMap);
   
 });
