@@ -1,0 +1,175 @@
+{
+  "id": "91ab22d7-f45f-4d8b-850f-237eb306e0bf",
+  "name": "Create Composition",
+  "auto": true,
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "conditionalResponses": [],
+  "context": [],
+  "contexts": [],
+  "endInteraction": false,
+  "events": [],
+  "fallbackIntent": false,
+  "liveAgentHandoff": false,
+  "parentId": null,
+  "followUpIntents": [],
+  "priority": 500000,
+  "responses": [
+    {
+      "action": "",
+      "affectedContexts": [],
+      "parameters": [],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "messages": [
+        {
+          "type": "message",
+          "condition": "",
+          "speech": [
+            "Okay!"
+          ]
+        }
+      ],
+      "resetContexts": true
+    }
+  ],
+  "rootParentId": null,
+  "templates": [],
+  "userSays": [
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to produce ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new composition",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "e98824f3-16f2-4e02-a49e-be4812220f5b",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to write ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new composition",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "138cf434-9e39-4346-b30d-b8129284e0d2",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to make ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new composition",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "9802adfa-bbfa-4f06-acc8-a17c7d1523d8",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to produce ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new song",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "1cbadf23-dec5-4132-95fe-2e71c081d96c",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to write ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new song",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "bbb624ca-1e97-4d8d-b579-0425b2a8c5f4",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to create ",
+          "userDefined": false
+        },
+        {
+          "text": "a",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " new song",
+          "userDefined": false
+        }
+      ],
+      "count": 0,
+      "id": "1ffc753e-2dee-4404-83f3-0cd0335aa652",
+      "updated": null
+    }
+  ],
+  "webhookForSlotFilling": true,
+  "webhookUsed": true
+}
