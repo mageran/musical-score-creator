@@ -1,0 +1,103 @@
+{
+  "id": "c04c0abb-0142-4c4f-9939-921ef477ad20",
+  "name": "Show Note",
+  "auto": true,
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "conditionalResponses": [],
+  "context": [],
+  "contexts": [],
+  "endInteraction": false,
+  "events": [],
+  "fallbackIntent": false,
+  "liveAgentHandoff": false,
+  "parentId": null,
+  "followUpIntents": [],
+  "priority": 500000,
+  "responses": [
+    {
+      "action": "",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "noInputPromptMessages": [],
+          "noMatchPromptMessages": [],
+          "promptMessages": [],
+          "defaultValue": "",
+          "name": "noteType",
+          "dataType": "@note_type",
+          "isList": false,
+          "required": false,
+          "prompts": [],
+          "value": "$noteType",
+          "outputDialogContexts": []
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "messages": [
+        {
+          "type": "message",
+          "condition": "",
+          "speech": [
+            "Okay!"
+          ]
+        }
+      ],
+      "resetContexts": false
+    }
+  ],
+  "rootParentId": null,
+  "templates": [],
+  "userSays": [
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "show me note ",
+          "userDefined": false
+        },
+        {
+          "text": "note_type",
+          "userDefined": true,
+          "alias": "noteType",
+          "meta": "@note_type"
+        }
+      ],
+      "count": 0,
+      "id": "d226aeab-2aa4-4446-b5cd-b9c44405268b",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "give me ",
+          "userDefined": false
+        },
+        {
+          "text": "note",
+          "userDefined": false,
+          "meta": "@sys.ignore",
+          "alias": null
+        },
+        {
+          "text": " ",
+          "userDefined": false
+        },
+        {
+          "text": "note_type",
+          "userDefined": true,
+          "alias": "noteType",
+          "meta": "@note_type"
+        }
+      ],
+      "count": 0,
+      "id": "d5c4ef7d-ea9d-4791-b7c6-71d2505426b8",
+      "updated": null
+    }
+  ],
+  "webhookForSlotFilling": true,
+  "webhookUsed": true
+}
