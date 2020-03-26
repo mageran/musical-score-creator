@@ -1,0 +1,111 @@
+{
+  "id": "015c3dca-7d8c-4bd9-bdb3-53dff8049bce",
+  "name": "Listen Notes",
+  "auto": true,
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "conditionalResponses": [],
+  "context": [],
+  "contexts": [],
+  "endInteraction": false,
+  "events": [],
+  "fallbackIntent": false,
+  "liveAgentHandoff": false,
+  "parentId": null,
+  "followUpIntents": [],
+  "priority": 500000,
+  "responses": [
+    {
+      "action": "",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "noInputPromptMessages": [],
+          "noMatchPromptMessages": [],
+          "promptMessages": [],
+          "defaultValue": "",
+          "name": "videoType",
+          "dataType": "@video_type",
+          "isList": false,
+          "required": false,
+          "prompts": [],
+          "value": "$videoType",
+          "outputDialogContexts": []
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "messages": [
+        {
+          "type": "message",
+          "condition": "",
+          "speech": [
+            "Okay!"
+          ]
+        }
+      ],
+      "resetContexts": false
+    }
+  ],
+  "rootParentId": null,
+  "templates": [],
+  "userSays": [
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to listen note ",
+          "userDefined": false
+        },
+        {
+          "text": "note",
+          "userDefined": true,
+          "alias": "videoType",
+          "meta": "@video_type"
+        }
+      ],
+      "count": 0,
+      "id": "1e123788-7828-48e6-b065-3f0c4f3e7f28",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "switch to note ",
+          "userDefined": false
+        },
+        {
+          "text": "note",
+          "userDefined": true,
+          "alias": "videoType",
+          "meta": "@video_type"
+        }
+      ],
+      "count": 0,
+      "id": "815a41a8-90c6-4383-9be4-e16582069592",
+      "updated": null
+    },
+    {
+      "isTemplate": false,
+      "data": [
+        {
+          "text": "I want to learn note ",
+          "userDefined": false
+        },
+        {
+          "text": "note",
+          "userDefined": true,
+          "alias": "videoType",
+          "meta": "@video_type"
+        }
+      ],
+      "count": 0,
+      "id": "8947f62c-efbe-4db9-89a3-cb9fd06cd8b6",
+      "updated": null
+    }
+  ],
+  "webhookForSlotFilling": true,
+  "webhookUsed": true
+}
