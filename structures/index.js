@@ -6,6 +6,7 @@ const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow,navigato
 var compose_1 ='';
 var counter=0;
 var scenarioType=0;
+var level = 1;
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -116,6 +117,7 @@ var scenarioType=0;
     }
    
     if(scenarioType==2){
+        displayBoard(agent,compose_1);
 		//var counter=0;
 	    var noteType2 =""+ agent.parameters.noteType;
 		if(noteType2==compose_1[counter] && counter<compose_1.length){
@@ -126,10 +128,10 @@ var scenarioType=0;
                 scenarioType=0;
                 counter=0;
             }else{
-            	agent.add("Correct Choice,What is name of note: "+ counter );
+            	agent.add("Correct Choice,What is name of note: "+ (counter+1) );
             }
 		}else{
-			agent.add("Wrong Choice! What is name of note: "+ counter); // ask that user wants to go learn scenario
+			agent.add("Wrong Choice! What is name of note: "+ (counter+1)); // ask that user wants to go learn scenario
 		}
 	
     }
@@ -170,12 +172,13 @@ var scenarioType=0;
 
   function makeQuiz(agent){
     scenarioType=2;
-    var level = 1; // in later..
+    counter=0;
+    //var level = 1; // in later..
     compose_1 = '';
     for(var i = 0;i<level;i++)
     	compose_1 = compose_1 + 'abcd';//random(agent);
     displayBoard(agent,compose_1);
-    agent.add("What is name of note: 0 " );
+    agent.add("What is name of note: 1 " );
 
   }
     
