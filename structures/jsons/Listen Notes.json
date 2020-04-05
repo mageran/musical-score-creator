@@ -2,57 +2,65 @@
   "id": "015c3dca-7d8c-4bd9-bdb3-53dff8049bce",
   "name": "Listen Notes",
   "auto": true,
-  "condition": "",
-  "conditionalFollowupEvents": [],
-  "conditionalResponses": [],
-  "context": [],
   "contexts": [],
-  "endInteraction": false,
-  "events": [],
-  "fallbackIntent": false,
-  "liveAgentHandoff": false,
-  "parentId": null,
-  "followUpIntents": [],
-  "priority": 500000,
   "responses": [
     {
-      "action": "",
+      "resetContexts": false,
       "affectedContexts": [],
       "parameters": [
         {
-          "noInputPromptMessages": [],
-          "noMatchPromptMessages": [],
-          "promptMessages": [],
-          "defaultValue": "",
-          "name": "videoType",
-          "dataType": "@video_type",
-          "isList": false,
+          "id": "98799785-f08c-429b-be50-85e35817c092",
           "required": false,
-          "prompts": [],
+          "dataType": "@video_type",
+          "name": "videoType",
           "value": "$videoType",
-          "outputDialogContexts": []
+          "promptMessages": [],
+          "noMatchPromptMessages": [],
+          "noInputPromptMessages": [],
+          "outputDialogContexts": [],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
         }
       ],
       "defaultResponsePlatforms": {
         "google": true
       },
-      "messages": [
-        {
-          "type": "message",
-          "condition": "",
-          "speech": [
-            "Okay!"
-          ]
-        }
-      ],
-      "resetContexts": false
+      "speech": []
     }
   ],
-  "rootParentId": null,
-  "templates": [],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
   "userSays": [
     {
+      "id": "2888826f-7464-418c-9105-806dedf222a0",
+      "data": [
+        {
+          "text": "I want to hear note  ",
+          "userDefined": false
+        },
+        {
+          "text": "note",
+          "alias": "videoType",
+          "meta": "@video_type",
+          "userDefined": true
+        }
+      ],
       "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "1e123788-7828-48e6-b065-3f0c4f3e7f28",
       "data": [
         {
           "text": "I want to listen note ",
@@ -60,17 +68,18 @@
         },
         {
           "text": "note",
-          "userDefined": true,
           "alias": "videoType",
-          "meta": "@video_type"
+          "meta": "@video_type",
+          "userDefined": true
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "1e123788-7828-48e6-b065-3f0c4f3e7f28",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "815a41a8-90c6-4383-9be4-e16582069592",
       "data": [
         {
           "text": "switch to note ",
@@ -78,17 +87,18 @@
         },
         {
           "text": "note",
-          "userDefined": true,
           "alias": "videoType",
-          "meta": "@video_type"
+          "meta": "@video_type",
+          "userDefined": true
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "815a41a8-90c6-4383-9be4-e16582069592",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "8947f62c-efbe-4db9-89a3-cb9fd06cd8b6",
       "data": [
         {
           "text": "I want to learn note ",
@@ -96,16 +106,22 @@
         },
         {
           "text": "note",
-          "userDefined": true,
           "alias": "videoType",
-          "meta": "@video_type"
+          "meta": "@video_type",
+          "userDefined": true
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "8947f62c-efbe-4db9-89a3-cb9fd06cd8b6",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     }
   ],
-  "webhookForSlotFilling": true,
-  "webhookUsed": true
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
 }
