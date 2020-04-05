@@ -2,57 +2,84 @@
   "id": "c04c0abb-0142-4c4f-9939-921ef477ad20",
   "name": "Show Note",
   "auto": true,
-  "condition": "",
-  "conditionalFollowupEvents": [],
-  "conditionalResponses": [],
-  "context": [],
   "contexts": [],
-  "endInteraction": false,
-  "events": [],
-  "fallbackIntent": false,
-  "liveAgentHandoff": false,
-  "parentId": null,
-  "followUpIntents": [],
-  "priority": 500000,
   "responses": [
     {
-      "action": "",
+      "resetContexts": false,
       "affectedContexts": [],
       "parameters": [
         {
-          "noInputPromptMessages": [],
-          "noMatchPromptMessages": [],
-          "promptMessages": [],
-          "defaultValue": "",
-          "name": "noteType",
-          "dataType": "@note_type",
-          "isList": false,
+          "id": "4f42c6d2-9ea5-458c-8be5-072ac806a41e",
           "required": false,
-          "prompts": [],
+          "dataType": "@note_type",
+          "name": "noteType",
           "value": "$noteType",
-          "outputDialogContexts": []
+          "promptMessages": [],
+          "noMatchPromptMessages": [],
+          "noInputPromptMessages": [],
+          "outputDialogContexts": [],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
         }
       ],
       "defaultResponsePlatforms": {
         "google": true
       },
-      "messages": [
-        {
-          "type": "message",
-          "condition": "",
-          "speech": [
-            "Okay!"
-          ]
-        }
-      ],
-      "resetContexts": false
+      "speech": []
     }
   ],
-  "rootParentId": null,
-  "templates": [],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
   "userSays": [
     {
+      "id": "73ef2bb7-c6b7-4746-b51f-7c9301dd1ba4",
+      "data": [
+        {
+          "text": "Can you give me note ",
+          "userDefined": false
+        },
+        {
+          "text": "note_type",
+          "alias": "noteType",
+          "meta": "@note_type",
+          "userDefined": true
+        }
+      ],
       "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "a5b3c251-003b-4ddb-9642-c17de1dca79c",
+      "data": [
+        {
+          "text": "I want to watch note ",
+          "userDefined": false
+        },
+        {
+          "text": "note_type",
+          "alias": "noteType",
+          "meta": "@note_type",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "d226aeab-2aa4-4446-b5cd-b9c44405268b",
       "data": [
         {
           "text": "show me note ",
@@ -60,17 +87,18 @@
         },
         {
           "text": "note_type",
-          "userDefined": true,
           "alias": "noteType",
-          "meta": "@note_type"
+          "meta": "@note_type",
+          "userDefined": true
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "d226aeab-2aa4-4446-b5cd-b9c44405268b",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "d5c4ef7d-ea9d-4791-b7c6-71d2505426b8",
       "data": [
         {
           "text": "give me ",
@@ -78,9 +106,8 @@
         },
         {
           "text": "note",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " ",
@@ -88,16 +115,22 @@
         },
         {
           "text": "note_type",
-          "userDefined": true,
           "alias": "noteType",
-          "meta": "@note_type"
+          "meta": "@note_type",
+          "userDefined": true
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "d5c4ef7d-ea9d-4791-b7c6-71d2505426b8",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     }
   ],
-  "webhookForSlotFilling": true,
-  "webhookUsed": true
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
 }
