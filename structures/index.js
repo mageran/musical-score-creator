@@ -2,7 +2,7 @@
  
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow} = require('dialogflow-fulfillment','actions-on-google');
+const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow,navigator} = require('dialogflow-fulfillment','actions-on-google');
 var compose_1 ='';
 var counter=0;
 var scenarioType=0;
@@ -45,13 +45,13 @@ var scenarioType=0;
   function random(agent) {
     var rand = Math.random()*3 + 1;
     if(rand==1)
-	return "a";
+	return 'a';
     if(rand==2)
-	return "b";
+	return 'b';
     if(rand==3)
-	return "c";
+	return 'c';
     if(rand==4)
-	return "d";
+	return 'd';
   }
   const noteImageMap = {
     'd': {
@@ -108,7 +108,6 @@ var scenarioType=0;
   }
   
   function getNote(agent){
-
     if(scenarioType==1){
     	var noteType = agent.parameters.noteType;
     	compose_1 = compose_1 + noteType;
@@ -117,28 +116,29 @@ var scenarioType=0;
     }
    
     if(scenarioType==2){
-    	var noteType = agent.parameters.noteType;
-	if(noteType==compose_1[counter] && counter<compose_1.length){
-		agent.add("Correct Choice");
-		counter++;
-	}
-	if(noteType != compose_1[counter] && counter<compose_1.length){
-		agent.add("Wrong Choice"); // ask that user wants to go learn scenario
-	}
-
-	agent.add("What is name of note: " + counter);
-
-	if(counter >= counter<compose_1.length){
-		agent.add("Super, You completed the quiz!");
-		scenarioType=0;
-	}
+		//var counter=0;
+	    var noteType2 =""+ agent.parameters.noteType;
+		if(noteType2==compose_1[counter] && counter<compose_1.length){
+			counter++;
+            //displayBoard(agent,compose_1);
+            if(counter >= compose_1.length){
+                agent.add("Super, You completed the quiz!");
+                scenarioType=0;
+                counter=0;
+            }else{
+            	agent.add("Correct Choice,What is name of note: "+ counter );
+            }
+		}else{
+			agent.add("Wrong Choice! What is name of note: "+ counter); // ask that user wants to go learn scenario
+		}
+	
     }
   }
     
   function createSongPath(agent,compose,songPath){
     var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
     var pianoNote2= '4vH.wav"';
-    songPath += '<audio src=' + pianoNote+ compose[counter].toUpperCase() + pianoNote2+ '></audio>' ;
+    //!!!songPath += '<audio src=' + pianoNote+ compose[counter].toUpperCase() + pianoNote2+ '></audio>' ;
     //agent.add('<speak> <audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio></speak>');
     //agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
     return songPath;
@@ -155,30 +155,55 @@ var scenarioType=0;
         buttonUrl: 'https://assistant.google.com/'
         
     }));
-    var songPath='';
+    var songPath='';/*
     for(var i = 0;i<compose.length;i++){
-      songPath = songPath + createSongPath(agent,compose,songPath);
-      if(i<compose.length-2)
-      	songPath += '+';
+      songPath = createSongPath(agent,compose,songPath);
+      //if(i<compose.length-2)
+      	//songPath += '+';
       counter= counter+1;
     }
     agent.add('<speak>'+songPath+'</speak>');
-    //myMusicList.push(songPath);
-    counter=0;
+    //myMusicList.push(songPath);*/
+    //counter=0;!!1
     
   }
 
   function makeQuiz(agent){
-    typeScenario=2;
-    var level = 3; // in later..
+    scenarioType=2;
+    var level = 1; // in later..
     compose_1 = '';
     for(var i = 0;i<level;i++)
-    	compose_1 = compose_1 + random(agent);
-    displayBoard(agent,compose);
-    agent.add("What is name of note: " + counter);
+    	compose_1 = compose_1 + 'abcd';//random(agent);
+    displayBoard(agent,compose_1);
+    agent.add("What is name of note: 0 " );
 
   }
-  
+    
+  function getMedia(constraints) {
+    let stream = null;
+
+    try {
+      stream = agent.mediaDevices.getUserMedia(constraints);
+      /* use the stream */
+    } catch(err) {
+      /* handle the error */
+    }
+  }   
+  //var mediaDevices = navigator.mediaDevices;
+  /*
+  function recordAudio(agent){
+    
+    agent.add("yuksel");
+    
+    agent.mediaDevices.getUserMedia({audio: true,  
+        video:false}).then(function(stream) {
+       agent.add("deneme"+stream);
+    }).catch(function(err) {
+      agent.add("Record Problem!");
+    });
+    
+    
+  }*/
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
@@ -188,6 +213,7 @@ var scenarioType=0;
   intentMap.set('Create Composition',createComposition);
   intentMap.set('Create Composition/getNote',getNote);
   intentMap.set('Make Quiz',makeQuiz);
+  //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
 });
