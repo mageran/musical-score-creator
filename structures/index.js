@@ -7,6 +7,7 @@ var compose_1 ='';
 var counter=0;
 var scenarioType=0;
 var level = 1;
+var songPath='';
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -137,10 +138,10 @@ var level = 1;
     }
   }
     
-  function createSongPath(agent,compose,songPath){
+  function createSongPath(agent,compose,songPath,tmp){
     var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
     var pianoNote2= '4vH.wav"';
-    //!!!songPath += '<audio src=' + pianoNote+ compose[counter].toUpperCase() + pianoNote2+ '></audio>' ;
+    songPath += '<audio src=' + pianoNote+ compose[tmp].toUpperCase() + pianoNote2+ '></audio>' ;
     //agent.add('<speak> <audio src=' + pianoNote+ compose_1[counter].toUpperCase() + pianoNote2+ '></audio></speak>');
     //agent.add("pianoNote:"+pianoNote+ compose_1[i] + pianoNote2);
     return songPath;
@@ -150,24 +151,20 @@ var level = 1;
     var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose+'&clef=treble&octave=4';
     agent.add(new Card({
         
-    	title: 'SongName',
+    	title: 'SongName',//compose
         imageUrl: notePictureUrl,
         text: 'Test',
         buttonText: 'TestButton',
         buttonUrl: 'https://assistant.google.com/'
         
     }));
-    var songPath='';/*
+    var tmp=0;
     for(var i = 0;i<compose.length;i++){
-      songPath = createSongPath(agent,compose,songPath);
-      //if(i<compose.length-2)
-      	//songPath += '+';
-      counter= counter+1;
+      songPath = createSongPath(agent,compose,songPath,tmp);
+      tmp++;
     }
-    agent.add('<speak>'+songPath+'</speak>');
-    //myMusicList.push(songPath);*/
-    //counter=0;!!1
-    
+    //myMusicList.push(songPath);
+    //counter=0;
   }
 
   function makeQuiz(agent){
@@ -178,8 +175,7 @@ var level = 1;
     for(var i = 0;i<level;i++)
     	compose_1 = compose_1 + 'abcd';//random(agent);
     displayBoard(agent,compose_1);
-    agent.add("What is name of note: 1 " );
-
+    agent.add('<speak>'+songPath+'What is name of note:1'+'</speak>');
   }
     
   function getMedia(constraints) {
