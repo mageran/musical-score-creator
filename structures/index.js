@@ -9,6 +9,7 @@ var scenarioType=0;
 var level = 1;
 var songPath='';
 var repeat=false;
+var test=false;
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -38,6 +39,13 @@ var repeat=false;
  
   function welcome(agent) {
     agent.add(`Welcome to MusicNinja. How can I help you?`);
+    compose_1 ='';
+    counter=0;
+    scenarioType=0;
+    level = 1;
+    songPath='';
+    repeat=false;
+    test=false;
   }
  
   function fallback(agent) {
@@ -105,11 +113,18 @@ var repeat=false;
   
   function createComposition(agent){
     //add names in later
-    agent.add("Okay I am ready to help! The balls in your court");
+    agent.add("Okay I am ready!");
     compose_1='';
+    songPath='';
     scenarioType=1;
+    agent.add("If you want to test your song,just say test it!");
   }
-  
+  function finish(){
+  	scenarioType=0;
+    //Do you want to save it?
+    //Do you want to listen it?
+    
+  }
   function getNote(agent){
     if(scenarioType==1){
     	var noteType = agent.parameters.noteType;
@@ -159,7 +174,8 @@ var repeat=false;
         
     }));
     var tmp=0;
-    if(repeat != true){
+    if(repeat == false && test == false ){
+      agent.add("test"+test+songPath);
       for(var i = 0;i<compose.length;i++){
         songPath = createSongPath(agent,compose,songPath,tmp);
         tmp++;
@@ -181,15 +197,25 @@ var repeat=false;
     displayBoard(agent,compose_1);
     agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note:1'+'</speak>');
   }
-  function listenAgain(){
-    repeat=true;
+  function testSong(agent){
+              agent.add('<speak>'+songPath+'</speak>');
+
+    if(scenarioType==1){
+          test=true;
+          displayBoard(agent,compose_1);
+          agent.add('<speak>'+songPath+'</speak>');
+    }
+  	test=false;
+  }
+  function listenAgain(agent){
     if(scenarioType == 2){
+        repeat=true;
         displayBoard(agent,compose_1);
     	agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note: '+(counter+1)+'</speak>');
-    }else
-    	agent.add("Repeat what?");//scenarioType3 comes here
+    }
     repeat=false;
   }
+
   function getMedia(constraints) {
     let stream = null;
 
@@ -225,6 +251,8 @@ var repeat=false;
   intentMap.set('Create Composition/getNote',getNote);
   intentMap.set('Make Quiz',makeQuiz);
   intentMap.set('ListenAgain',listenAgain);
+  intentMap.set('Finish',finish);
+  intentMap.set('TestSong',testSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
