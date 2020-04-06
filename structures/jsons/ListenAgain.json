@@ -1,0 +1,129 @@
+{
+  "id": "ee995a7e-8ce5-4f44-afcc-c7a822e01a0f",
+  "name": "ListenAgain",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
+  "userSays": [
+    {
+      "id": "943f513f-1f82-4025-afea-863544db2d52",
+      "data": [
+        {
+          "text": "repeat",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "9f6b12e8-e54e-4b09-973b-902bd3df74af",
+      "data": [
+        {
+          "text": "I can't hear it",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "dcff0132-7bf6-4a1b-9f3c-10751855f6fd",
+      "data": [
+        {
+          "text": "play again",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "c51fafd7-753c-4476-8b1f-acf4d88ad6e5",
+      "data": [
+        {
+          "text": "Can you repeat again?",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "df4983a6-4d3d-4509-aade-8963d769d2d5",
+      "data": [
+        {
+          "text": "Can you play it again",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "21acb313-1134-4ba8-acbb-ca4e8f9820bf",
+      "data": [
+        {
+          "text": "repeat again",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "dae69749-4928-4afd-8d36-ac4b8ebb87b9",
+      "data": [
+        {
+          "text": "repeat it",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    }
+  ],
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
+}
