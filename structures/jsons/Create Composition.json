@@ -2,43 +2,85 @@
   "id": "91ab22d7-f45f-4d8b-850f-237eb306e0bf",
   "name": "Create Composition",
   "auto": true,
-  "condition": "",
-  "conditionalFollowupEvents": [],
-  "conditionalResponses": [],
-  "context": [],
   "contexts": [],
-  "endInteraction": false,
-  "events": [],
-  "fallbackIntent": false,
-  "liveAgentHandoff": false,
-  "parentId": null,
-  "followUpIntents": [],
-  "priority": 500000,
   "responses": [
     {
-      "action": "",
+      "resetContexts": true,
       "affectedContexts": [],
       "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
+        }
+      ],
       "defaultResponsePlatforms": {
         "google": true
       },
-      "messages": [
-        {
-          "type": "message",
-          "condition": "",
-          "speech": [
-            "Okay!"
-          ]
-        }
-      ],
-      "resetContexts": true
+      "speech": []
     }
   ],
-  "rootParentId": null,
-  "templates": [],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
   "userSays": [
     {
+      "id": "5ad911b1-0f42-453e-92f8-e90f4e18315b",
+      "data": [
+        {
+          "text": "create something",
+          "userDefined": false
+        }
+      ],
       "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "cf24fa57-8ba9-4fb8-94f2-b2dfecce667a",
+      "data": [
+        {
+          "text": "create something new",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "551277bf-a2a4-4f9b-968e-9f1adf43d93c",
+      "data": [
+        {
+          "text": "create song",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "13a41828-a716-4698-84d8-b798c157f2d8",
+      "data": [
+        {
+          "text": "create a new song",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "e98824f3-16f2-4e02-a49e-be4812220f5b",
       "data": [
         {
           "text": "I want to produce ",
@@ -46,21 +88,21 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new composition",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "e98824f3-16f2-4e02-a49e-be4812220f5b",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "138cf434-9e39-4346-b30d-b8129284e0d2",
       "data": [
         {
           "text": "I want to write ",
@@ -68,21 +110,21 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new composition",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "138cf434-9e39-4346-b30d-b8129284e0d2",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "9802adfa-bbfa-4f06-acc8-a17c7d1523d8",
       "data": [
         {
           "text": "I want to make ",
@@ -90,21 +132,21 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new composition",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "9802adfa-bbfa-4f06-acc8-a17c7d1523d8",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "1cbadf23-dec5-4132-95fe-2e71c081d96c",
       "data": [
         {
           "text": "I want to produce ",
@@ -112,21 +154,21 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new song",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "1cbadf23-dec5-4132-95fe-2e71c081d96c",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "bbb624ca-1e97-4d8d-b579-0425b2a8c5f4",
       "data": [
         {
           "text": "I want to write ",
@@ -134,21 +176,21 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new song",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "bbb624ca-1e97-4d8d-b579-0425b2a8c5f4",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     },
     {
-      "isTemplate": false,
+      "id": "1ffc753e-2dee-4404-83f3-0cd0335aa652",
       "data": [
         {
           "text": "I want to create ",
@@ -156,20 +198,25 @@
         },
         {
           "text": "a",
-          "userDefined": false,
           "meta": "@sys.ignore",
-          "alias": null
+          "userDefined": false
         },
         {
           "text": " new song",
           "userDefined": false
         }
       ],
+      "isTemplate": false,
       "count": 0,
-      "id": "1ffc753e-2dee-4404-83f3-0cd0335aa652",
-      "updated": null
+      "updated": 0,
+      "isAuto": false
     }
   ],
-  "webhookForSlotFilling": true,
-  "webhookUsed": true
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
 }
