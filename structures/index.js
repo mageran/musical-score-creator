@@ -130,7 +130,17 @@ var test=false;
     	var noteType = agent.parameters.noteType;
     	compose_1 = compose_1 + noteType;
     	//agent.add("compose_1 :"+compose_1);
-    	displayBoard(agent,compose_1);
+    	//displayBoard(agent,compose_1);
+        var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+        agent.add(new Card({
+
+            title: 'SongName',//compose
+            imageUrl: notePictureUrl,
+            text: 'Test',
+            buttonText: 'TestButton',
+            buttonUrl: 'https://assistant.google.com/'
+
+        }));
     }
    
     if(scenarioType==2){
@@ -175,7 +185,6 @@ var test=false;
     }));
     var tmp=0;
     if(repeat == false && test == false ){
-      agent.add("test"+test+songPath);
       for(var i = 0;i<compose.length;i++){
         songPath = createSongPath(agent,compose,songPath,tmp);
         tmp++;
@@ -198,13 +207,23 @@ var test=false;
     agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note:1'+'</speak>');
   }
   function testSong(agent){
-              agent.add('<speak>'+songPath+'</speak>');
-
-    if(scenarioType==1){
-          test=true;
-          displayBoard(agent,compose_1);
-          agent.add('<speak>'+songPath+'</speak>');
-    }
+        if(scenarioType==1){
+        	test=true;
+            var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+            agent.add(new Card({
+                title: 'SongName',//compose
+                imageUrl: notePictureUrl,
+                text: 'Test',
+                buttonText: 'TestButton',
+                buttonUrl: 'https://assistant.google.com/'
+            }));
+          	var tmp=0;
+           	for(var i = 0;i<compose_1.length;i++){
+            	songPath = createSongPath(agent,compose_1,songPath,tmp);
+            	tmp++;
+            }
+    		agent.add('<speak>'+songPath+'</speak>');
+    	}
   	test=false;
   }
   function listenAgain(agent){
