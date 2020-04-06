@@ -8,6 +8,7 @@ var counter=0;
 var scenarioType=0;
 var level = 1;
 var songPath='';
+var repeat=false;
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -118,23 +119,22 @@ var songPath='';
     }
    
     if(scenarioType==2){
-        displayBoard(agent,compose_1);
-		//var counter=0;
-	    var noteType2 =""+ agent.parameters.noteType;
-		if(noteType2==compose_1[counter] && counter<compose_1.length){
-			counter++;
+    	displayBoard(agent,compose_1);
+        //var counter=0;
+        var noteType2 =""+ agent.parameters.noteType;
+        if(noteType2==compose_1[counter] && counter<compose_1.length){
+        	counter++;
             //displayBoard(agent,compose_1);
             if(counter >= compose_1.length){
-                agent.add("Super, You completed the quiz!");
+            	agent.add("Super, You completed the quiz!");
                 scenarioType=0;
                 counter=0;
             }else{
             	agent.add("Correct Choice,What is name of note: "+ (counter+1) );
             }
-		}else{
-			agent.add("Wrong Choice! What is name of note: "+ (counter+1)); // ask that user wants to go learn scenario
-		}
-	
+        }else{
+              agent.add("Wrong Choice! What is name of note: "+ (counter+1)); // ask that user wants to go learn scenario
+        }
     }
   }
     
@@ -159,9 +159,11 @@ var songPath='';
         
     }));
     var tmp=0;
-    for(var i = 0;i<compose.length;i++){
-      songPath = createSongPath(agent,compose,songPath,tmp);
-      tmp++;
+    if(repeat != true){
+      for(var i = 0;i<compose.length;i++){
+        songPath = createSongPath(agent,compose,songPath,tmp);
+        tmp++;
+      }
     }
     //myMusicList.push(songPath);
     //counter=0;
@@ -170,21 +172,31 @@ var songPath='';
   function makeQuiz(agent){
     scenarioType=2;
     counter=0;
+    repeat=false;
     //var level = 1; // in later..
     compose_1 = '';
+    agent.add("Pay attention here!");
     for(var i = 0;i<level;i++)
     	compose_1 = compose_1 + 'abcd';//random(agent);
     displayBoard(agent,compose_1);
-    agent.add('<speak>'+songPath+'What is name of note:1'+'</speak>');
+    agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note:1'+'</speak>');
   }
-    
+  function listenAgain(){
+    repeat=true;
+    if(scenarioType == 2){
+        displayBoard(agent,compose_1);
+    	agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note: '+(counter+1)+'</speak>');
+    }else
+    	agent.add("Repeat what?");//scenarioType3 comes here
+    repeat=false;
+  }
   function getMedia(constraints) {
     let stream = null;
 
     try {
       stream = agent.mediaDevices.getUserMedia(constraints);
       /* use the stream */
-    } catch(err) {
+    }catch(err) {
       /* handle the error */
     }
   }   
@@ -212,6 +224,7 @@ var songPath='';
   intentMap.set('Create Composition',createComposition);
   intentMap.set('Create Composition/getNote',getNote);
   intentMap.set('Make Quiz',makeQuiz);
+  intentMap.set('ListenAgain',listenAgain);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
