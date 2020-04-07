@@ -3,6 +3,7 @@
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow,navigator} = require('dialogflow-fulfillment','actions-on-google');
+const {Table} = require('dialogflow-fulfillment');
 var compose_1 ='';
 var counter=0;
 var scenarioType=0;
@@ -38,7 +39,7 @@ var test=false;
 
  
   function welcome(agent) {
-    agent.add(`Welcome to MusicNinja. How can I help you?`);
+    //agent.add(`Welcome to MusicNinja. How can I help you?`);
     compose_1 ='';
     counter=0;
     scenarioType=0;
@@ -244,7 +245,21 @@ var test=false;
     }catch(err) {
       /* handle the error */
     }
-  }   
+  }
+    
+  function showTable(agent){
+  	    
+    agent.add(new Table({
+  		dividers: true,
+  		columns: ['header 1', 'header 2', 'header 3'],
+  		rows: [
+    		['row 1 item 1', 'row 1 item 2', 'row 1 item 3'],
+    		['row 2 item 1', 'row 2 item 2', 'row 2 item 3'],
+  		],
+	})
+    );
+    
+  }
   //var mediaDevices = navigator.mediaDevices;
   /*
   function recordAudio(agent){
@@ -272,6 +287,7 @@ var test=false;
   intentMap.set('ListenAgain',listenAgain);
   intentMap.set('Finish',finish);
   intentMap.set('TestSong',testSong);
+  intentMap.set('Show MusicList',showTable);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
