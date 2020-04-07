@@ -16,3 +16,20 @@ function connectToDatabase(){
     });
 
 }
+
+function insertIntoMusicToDatabase(connection, musicName){
+	return new Promise((resolve, reject) => {
+		connection.query('INSERT INTO musicTable(name,signup_date) VALUES ('+"'"+musicName+"'"+',NULL);', (error, results, fields) => {
+			resolve(results);
+		});
+    	});
+}
+
+
+function deleteMusicFromDatabase(connection, musicName){
+    return new Promise((resolve, reject) => {
+      connection.query('DELETE from musicTable WHERE name = ?', musicName, (error, results, fields) => {
+        resolve(results);
+      });
+    });
+}
