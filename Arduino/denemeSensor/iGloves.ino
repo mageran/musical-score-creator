@@ -20,11 +20,12 @@ int sensorValue8 = 0;
 int sensorValue9 = 0;
 int sensorValue10 = 0;
 int ledGreen = 13;
-int ledBlue = 12;
+//int ledBlue = 12;
 int ledRed = 11;
 
 int count = 0;
 
+char compose[4] = "abcd";
 
 void setup() {
   // put your setup code here, to run once:
@@ -46,8 +47,8 @@ void setup() {
   Serial.println("Started...");
 
 }
-
-void loop() {
+int i = 0;
+void loop(i<compose.length()) {
   // put your main code here, to run repeatedly:
   sensorValue1 = digitalRead(sensor1);
   sensorValue2 = digitalRead(sensor2);
@@ -60,34 +61,34 @@ void loop() {
   sensorValue9 = digitalRead(sensor9);
   sensorValue10 = digitalRead(sensor10);
 
+  char note ="a";
   //Serial.println(sensorValue);
   //Serial.println(count);
   digitalWrite(ledRed, LOW);
   digitalWrite(ledBlue, LOW);
   digitalWrite(ledGreen, LOW);
-/*
-  if (sensorValue1 == 1) {
+
+  if (compose[i]==note && sensorValue1 == 1 && sensorValue2 == 0 && sensorValue3 == 0 && sensorValue4 == 0 && sensorValue5 == 0 && sensorValue6 == 0 && sensorValue7 == 0 && sensorValue8 == 0 && sensorValue9 == 0 && sensorValue10 == 0) {
     count++;
 
-    if (count % 3 == 1) {
-      digitalWrite(ledRed, HIGH);
-
-
-    } else if (count % 3 == 2) {
-      digitalWrite(ledRed, HIGH);
-      digitalWrite(ledBlue, HIGH);
-    } else if (count % 3 == 0) {
-      digitalWrite(ledRed, HIGH);
-      digitalWrite(ledBlue, HIGH);
+    if (count % 2 == 1) {
+      digitalWrite(ledRed, LOW);
       digitalWrite(ledGreen, HIGH);
 
-
+    }else if (count % 2 == 2) {
+      digitalWrite(ledRed, LOW);
+      digitalWrite(ledGreen, LOW);
     }
-*/
 
+
+
+  }else{
+
+      digitalWrite(ledRed, HIGH);
+      digitalWrite(ledGreen, LOW);
 
 
   }
-  delay(250);
+  delay(250);   //tested.
 
 }
