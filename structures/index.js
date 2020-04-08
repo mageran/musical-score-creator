@@ -12,6 +12,7 @@ var level = 1;
 var songPath='';
 var repeat=false;
 var test=false;
+var save=false;
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -41,24 +42,14 @@ var test=false;
   function addSong(agent){
   	
     const newSongName = agent.parameters.songName;
-    var compose = "abbd";
+    var compose = compose_1;
     var composerName = "yuksel";
-    //var ref = admin.database().ref("musicninja-25923/songName");
-    //var songName = ref.child("songName");
     
-	admin.database().ref('musicninja-25923').transaction((songName) => {
-      if(songName !== null) {
-        songName.composeName = newSongName;
-        songName.composer = composerName;
-        agent.add("succesfully");
-      }
-      return songName;
-    }, function(error, isSuccess) {
-      console.log('Update average age transaction success: ' + isSuccess);
+    admin.database().ref('songName/' + newSongName).set({
+      compose: compose,
+      composerName: composerName,
     });
-    agent.add("Successfully");
-
-  
+  	agent.add("Song is saved Succesfully");
   }
  /*class Node{
     constructor(data,name, next = null){
@@ -68,16 +59,7 @@ var test=false;
     }
  }*/  
  
- /*class LinkedList{
-    constructor(){
-        this.head = null;
-    }
- }*/
- //let myMusicList = new LinkedList();
-  //in later, create an intent for create new songAlbum
-  //in later, define a function for keeping names
-
- 
+    
   function welcome(agent) {
     agent.add(`Welcome to MusicNinja. How can I help you?`);
     compose_1 ='';
@@ -162,8 +144,9 @@ var test=false;
   }
   function finish(){
   	scenarioType=0;
-    //Do you want to save it?
-    //Do you want to listen it?
+    save=true;
+    agent.add("Do you want to save it?"); // go to Yes/No intent
+    //Do you want to listen it?  in later
     
   }
   function getNote(agent){
@@ -286,7 +269,14 @@ var test=false;
       /* handle the error */
     }
   }
-    
+  function answers(agent){
+  	var answer = agent.parameters.answer;
+	if(answer == "yes"){
+    	save=true;
+      	agent.add("for saving just say: Save and the name of compose");
+    }else
+      save=false;
+  } 
   function showTable(agent){
   	agent.add("YK");
     agent.add(new Table({
@@ -309,10 +299,7 @@ var test=false;
     );
     
   }
-function connectToDatabase(){
-	agent.add("yuksel");
 
-}
   //var mediaDevices = navigator.mediaDevices;
   /*
   function recordAudio(agent){
@@ -342,6 +329,7 @@ function connectToDatabase(){
   intentMap.set('TestSong',testSong);
   intentMap.set('Show MusicList',showTable);
   intentMap.set('SaveMusic',addSong);
+  intentMap.set('Yes/No',answers);
   //intentMap.set('',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
