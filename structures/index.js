@@ -46,7 +46,7 @@ var test=false;
     //var ref = admin.database().ref("musicninja-25923/songName");
     //var songName = ref.child("songName");
     
-	admin.database().ref('songName').transaction((songName) => {
+	admin.database().ref('musicninja-25923').transaction((songName) => {
       if(songName !== null) {
         songName.composeName = newSongName;
         songName.composer = composerName;
@@ -56,7 +56,8 @@ var test=false;
     }, function(error, isSuccess) {
       console.log('Update average age transaction success: ' + isSuccess);
     });
-    
+    agent.add("Successfully");
+
   
   }
  /*class Node{
