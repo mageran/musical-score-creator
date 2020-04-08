@@ -24,7 +24,7 @@ var test=false;
     
 // initialise DB connection
   const admin = require('firebase-admin');
-  	admin.initializeApp({
+  admin.initializeApp({
     	credential: admin.credential.applicationDefault(),
     	databaseURL: 'ws:https://musicninja-25923.firebaseio.com/',
   });
@@ -36,6 +36,28 @@ var test=false;
       var contentOfMusic = snapshot.child("song1").val();
       agent.add("content" + contentOfMusic);
     });
+  }
+    
+  function addSong(agent){
+  	
+    const newSongName = agent.parameters.songName;
+    var compose = "abbd";
+    var composerName = "yuksel";
+    //var ref = admin.database().ref("musicninja-25923/songName");
+    //var songName = ref.child("songName");
+    
+	admin.database().ref('songName').transaction((songName) => {
+      if(songName !== null) {
+        songName.composeName = newSongName;
+        songName.composer = composerName;
+        agent.add("succesfully");
+      }
+      return songName;
+    }, function(error, isSuccess) {
+      console.log('Update average age transaction success: ' + isSuccess);
+    });
+    
+  
   }
  /*class Node{
     constructor(data,name, next = null){
@@ -318,7 +340,8 @@ function connectToDatabase(){
   intentMap.set('Finish',finish);
   intentMap.set('TestSong',testSong);
   intentMap.set('Show MusicList',showTable);
-  intentMap.set('SaveMusic',handleSong);
+  intentMap.set('SaveMusic',addSong);
+  //intentMap.set('',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
