@@ -1,0 +1,81 @@
+{
+  "id": "2a7b4abd-687c-45ec-bf15-842be1f0b9d0",
+  "name": "Yes/No",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "8039c4d6-54bc-48ba-af2e-406fd9387498",
+          "required": false,
+          "dataType": "@Answer",
+          "name": "answer",
+          "value": "$answer",
+          "promptMessages": [],
+          "noMatchPromptMessages": [],
+          "noInputPromptMessages": [],
+          "outputDialogContexts": [],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
+  "userSays": [
+    {
+      "id": "51c1ebc9-a722-407c-9aac-a97ec4443738",
+      "data": [
+        {
+          "text": "no",
+          "alias": "answer",
+          "meta": "@Answer",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "1c2eda0e-c903-4b96-ace4-d8dea121251d",
+      "data": [
+        {
+          "text": "yes",
+          "alias": "answer",
+          "meta": "@Answer",
+          "userDefined": false
+        }
+      ],
+      "isTemplate": false,
+      "count": 1,
+      "updated": 0,
+      "isAuto": false
+    }
+  ],
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
+}

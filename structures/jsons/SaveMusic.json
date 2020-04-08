@@ -1,0 +1,108 @@
+{
+  "id": "561e1801-2255-4833-9979-066f17f20605",
+  "name": "SaveMusic",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "557765f8-d95f-4a75-ae27-d19c7b37c3b3",
+          "required": false,
+          "dataType": "@sys.any",
+          "name": "songName",
+          "value": "$songName",
+          "promptMessages": [],
+          "noMatchPromptMessages": [],
+          "noInputPromptMessages": [],
+          "outputDialogContexts": [],
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "condition": "",
+          "speech": "Okay!"
+        }
+      ],
+      "defaultResponsePlatforms": {
+        "google": true
+      },
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": true,
+  "fallbackIntent": false,
+  "events": [],
+  "userSays": [
+    {
+      "id": "d631dba3-b8bd-4d5a-be1f-0b7fddeb176d",
+      "data": [
+        {
+          "text": "save it with ",
+          "userDefined": false
+        },
+        {
+          "text": "songName",
+          "alias": "songName",
+          "meta": "@sys.any",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "4a72930c-56e7-4de4-8c58-f48d169f8d06",
+      "data": [
+        {
+          "text": "save ",
+          "userDefined": false
+        },
+        {
+          "text": "songName",
+          "alias": "songName",
+          "meta": "@sys.any",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    },
+    {
+      "id": "713e61b0-7ea9-4262-83fe-b8a516c8fa42",
+      "data": [
+        {
+          "text": "save it ",
+          "userDefined": false
+        },
+        {
+          "text": "songName",
+          "alias": "songName",
+          "meta": "@sys.any",
+          "userDefined": true
+        }
+      ],
+      "isTemplate": false,
+      "count": 0,
+      "updated": 0,
+      "isAuto": false
+    }
+  ],
+  "followUpIntents": [],
+  "liveAgentHandoff": false,
+  "endInteraction": false,
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": [],
+  "templates": []
+}
