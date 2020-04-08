@@ -4,6 +4,7 @@ const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow,navigator} = require('dialogflow-fulfillment','actions-on-google');
 const {Table} = require('dialogflow-fulfillment');
+const {mysql} = require('mysql');
 var compose_1 ='';
 var counter=0;
 var scenarioType=0;
@@ -20,6 +21,22 @@ var test=false;
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
+    
+// initialise DB connection
+  const admin = require('firebase-admin');
+  	admin.initializeApp({
+    	credential: admin.credential.applicationDefault(),
+    	databaseURL: 'ws:https://musicninja-25923.firebaseio.com/',
+  });
+
+  function handleSong(agent) {
+    const name = agent.parameters.songName;
+    agent.add("Thank you...");
+    return admin.database().ref('songName').once("value").then((snapshot) => {
+      var contentOfMusic = snapshot.child("song1").val();
+      agent.add("content" + contentOfMusic);
+    });
+  }
  /*class Node{
     constructor(data,name, next = null){
         this.name = name;
@@ -39,7 +56,7 @@ var test=false;
 
  
   function welcome(agent) {
-    //agent.add(`Welcome to MusicNinja. How can I help you?`);
+    agent.add(`Welcome to MusicNinja. How can I help you?`);
     compose_1 ='';
     counter=0;
     scenarioType=0;
@@ -248,18 +265,31 @@ var test=false;
   }
     
   function showTable(agent){
-  	    
+  	agent.add("YK");
     agent.add(new Table({
   		dividers: true,
   		columns: ['header 1', 'header 2', 'header 3'],
-  		rows: [
-    		['row 1 item 1', 'row 1 item 2', 'row 1 item 3'],
-    		['row 2 item 1', 'row 2 item 2', 'row 2 item 3'],
-  		],
+        rows: [
+          {
+            cells: ['row 1 item 1', 'row 1 item 2', 'row 1 item 3'],
+            dividerAfter: false,
+          },
+          {
+            cells: ['row 2 item 1', 'row 2 item 2', 'row 2 item 3'],
+            dividerAfter: true,
+          },
+          {
+            cells: ['row 3 item 1', 'row 3 item 2', 'row 3 item 3'],
+          },
+        ],
 	})
     );
     
   }
+function connectToDatabase(){
+	agent.add("yuksel");
+
+}
   //var mediaDevices = navigator.mediaDevices;
   /*
   function recordAudio(agent){
@@ -288,6 +318,7 @@ var test=false;
   intentMap.set('Finish',finish);
   intentMap.set('TestSong',testSong);
   intentMap.set('Show MusicList',showTable);
+  intentMap.set('SaveMusic',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
