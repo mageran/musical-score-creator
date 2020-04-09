@@ -13,6 +13,7 @@ var songPath='';
 var repeat=false;
 var test=false;
 var save=false;
+var userName='';
 //const app = dialogflow();
 
   process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
@@ -70,7 +71,7 @@ var save=false;
  
     
   function welcome(agent) {
-    agent.add(`Welcome to MusicNinja. How can I help you?`);
+    agent.add("Welcome to MusicNinja. What is your name?");
     compose_1 ='';
     counter=0;
     scenarioType=0;
@@ -80,6 +81,10 @@ var save=false;
     test=false;
   }
  
+  function getUserName(agent){
+  	userName = agent.parameters.userName;
+  	agent.add("Hi"+userName+"How can I help you?");
+  }
   function fallback(agent) {
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);
@@ -340,6 +345,7 @@ var save=false;
   intentMap.set('SaveMusic',addSong);
   intentMap.set('Yes/No',answers);
   intentMap.set('DeleteMusic',deleteSong);
+  intentMap.set('getUserName',getUserName);
   //intentMap.set('',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
