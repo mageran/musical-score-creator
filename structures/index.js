@@ -51,6 +51,15 @@ var save=false;
     });
   	agent.add("Song is saved Succesfully");
   }
+    
+  function deleteSong(agent){
+
+    const newSongName = agent.parameters.songName;
+    var compose = compose_1;
+    var composerName = "yuksel";
+    admin.database().ref('songName/' + newSongName).remove();
+    agent.add("Song is deleted Succesfully");
+  }
  /*class Node{
     constructor(data,name, next = null){
         this.name = name;
@@ -330,6 +339,7 @@ var save=false;
   intentMap.set('Show MusicList',showTable);
   intentMap.set('SaveMusic',addSong);
   intentMap.set('Yes/No',answers);
+  intentMap.set('DeleteMusic',deleteSong);
   //intentMap.set('',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
