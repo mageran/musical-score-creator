@@ -40,11 +40,11 @@ app.get('/api/note', (req, res) => {
   // Create a stave of width 400 at position x10, y40 on the canvas.
   var staves = new Array(5);
   var counter=10;
-  for(var i=0;i<5;i++){
+  for(var i=0;i<2;i++){
 	staves[i] = new VF.Stave(10, counter, w - 20);
 	staves[i].addClef(clef);
 	staves[i].setContext(context).draw();
-	counter += 60;
+	counter += 100;
   }
 
   // Add a clef and time signature.
@@ -54,29 +54,37 @@ app.get('/api/note', (req, res) => {
   const drawNote = () => {
 
     if (!note) return;
+    /*
     const accidental = note[note.length]
     var noteNames = new Array(note.length);
     //var octaveNums = new Array(note.length);
     var octaveNum = Number.parseInt(octave);
     var notes = new Array(note.length);
     for(var i = 0;i<note.length;i++){
-	noteNames[i]= note[i].toLowerCase();
-	//if (NoteNames[i].indexOf(noteNames[i]) < 0) return;
-        //octaveNums[i] = Number.parseInt(octave.get(i));
-        //if (isNaN(octaveNums[i])) return
-	var noteObj = new VF.StaveNote({clef, keys: [`${noteNames[i]}/${octaveNum}`], duration: "2" })
-	notes[i]= noteObj;
+      noteNames[i]= note[i].toLowerCase();
+      //if (NoteNames[i].indexOf(noteNames[i]) < 0) return;
+      //octaveNums[i] = Number.parseInt(octave.get(i));
+      //if (isNaN(octaveNums[i])) return
+      var noteObj = new VF.StaveNote({clef, keys: [`${noteNames[i]}/${octaveNum}`], duration: "4" })
+      if (accidental === '#' || accidental === 's') {
+        noteObj.addAccidental(0, new VF.Accidental("#"))
+      }
+      if (accidental === 'b') {
+        noteObj.addAccidental(0, new VF.Accidental("b"))
+      }
+      notes[i]= noteObj;
 
     }
-    if (accidental === '#' || accidental === 's') {
-      noteObj.addAccidental(0, new VF.Accidental("#"))
-    }
-    if (accidental === 'b') {
-      noteObj.addAccidental(0, new VF.Accidental("b"))
-    }
+    */
+    
+    var octaveNum = Number.parseInt(octave);
+    const notes = note.split('').map(n => {
+      const keys = [`${n.toLowerCase()}/${octaveNum}`];
+      return new VF.StaveNote({clef, keys, duration: "4" });
+    });
     
     // Create a voice in 4/4 and add above notes
-    var voice = new VF.Voice({num_beats: 4,  beat_value: 4});
+    var voice = new VF.Voice({num_beats: 4, beat_value: 4});
     voice.setStrict(false);
     voice.addTickables(notes);
 
