@@ -1,13 +1,18 @@
 'use strict';
- 
+
+const dialogflowPackage = 'dialogflow-fulfillment';
+const actionsOnGooglePackage = 'actions-on-google';
+
 const functions = require('firebase-functions');
-const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow,navigator} = require('dialogflow-fulfillment','actions-on-google');
-const {Table} = require('dialogflow-fulfillment');
+const {WebhookClient} = require(dialogflowPackage);
+const {Card, Suggestion, BasicCard, Image, Button, Carousel, dialogflow, navigator} = require(dialogflowPackage);
+const {Table} = require(actionsOnGooglePackage);
+const {Suggestions} = require(actionsOnGooglePackage);
 const {mysql} = require('mysql');
 var compose_1 ='';
 var counter=0;
-var scenarioType=0;
+var scenarioType = 0;
+console.log(`******************* scenarioType set to  ${scenarioType}...`);
 var level = 1;
 var songPath='';
 var repeat=false;
@@ -16,20 +21,36 @@ var save=false;
 var userName='';
 //const app = dialogflow();
 
-  process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
-  //exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
-  exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
+//exports.dialogflowFirebaseFulfillment = functions.https.onRequest(app);
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
- 
-    
-// initialise DB connection
+  // initialise DB connection
   const admin = require('firebase-admin');
-  admin.initializeApp({
+  try {
+	  admin.initializeApp({
     	credential: admin.credential.applicationDefault(),
     	databaseURL: 'ws:https://musicninja-25923.firebaseio.com/',
-  });
+  	  });
+  } catch (err) {
+    console.log(`ignored error initializing firebase database: ${err}`);
+  }
+  
+  console.log(`******************* entering webhook: scenarioType is ${scenarioType}`);
+
+  
+  /**
+   * Helper function to get the image url for a note
+   */
+  function _getNoteImageUrl(note, clef = 'treble', octave = 4) {
+    //const urlprefix = 'http://localhost:5001/musicninja-25923/us-central1';
+    const urlprefix = 'https://us-central1-musicninja-25923.cloudfunctions.net';
+    //const urlprefix = 'https://us-central1-file-hosting-13205.cloudfunctions.net';
+    const noteUrl= `${urlprefix}/app/api/note?note=${note}&clef=${clef}&octave=${octave}`;
+ 	return noteUrl;
+  }
 
   function handleSong(agent) {
     const name = agent.parameters.songName;
@@ -61,29 +82,28 @@ var userName='';
     admin.database().ref('songName/' + newSongName).remove();
     agent.add("Song is deleted Succesfully");
   }
- /*class Node{
-    constructor(data,name, next = null){
-        this.name = name;
-        this.data = data;
-        this.next = next;
-    }
- }*/  
- 
     
   function welcome(agent) {
-    agent.add("Welcome to MusicNinja. What is your name?");
+    const conv = agent.conv();
+    console.log(JSON.stringify(conv, null, 2));
     compose_1 ='';
     counter=0;
-    scenarioType=0;
+    scenarioType = 0;
+    console.log(`******************* scenarioType set to  ${scenarioType}...`);
     level = 1;
     songPath='';
     repeat=false;
     test=false;
+    //conv.user.storage.scenarioType = 0;
+    conv.ask("Welcome to MusicNinja. How can I help you?");
+    conv.ask(new Suggestions(['Create a song']));
+    agent.add(conv);
   }
  
   function getUserName(agent){
   	userName = agent.parameters.userName;
-  	agent.add("Hi"+userName+"How can I help you?");
+  	//agent.add("Hi"+userName+"How can I help you?");
+    agent.add("yuksel");
   }
   function fallback(agent) {
     agent.add(`I didn't understand`);
@@ -113,30 +133,27 @@ var userName='';
     },
   };
   function showNote(agent){
-      const noteType = agent.parameters.noteType;
-      //let conv=agent.conv();
-      var noteUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteType+'&clef=treble&octave=4';
-  	  agent.add('Here is a picture of note ' + noteType);
-	  agent.add(new Card({
-        
+    const noteType = agent.parameters.noteType;
+    //let conv=agent.conv();
+    const noteUrl= _getNoteImageUrl(noteType);
+  	agent.add('Here is a picture of note ' + noteType);
+	agent.add(new Card({
 			  title: noteType,
               imageUrl: noteUrl,
-              text: 'picture of '+noteType,
+              text: 'picture of ' + noteType,
               buttonText: 'This is a button',
               buttonUrl: 'https://assistant.google.com/'
-        
-      }));
+     }));
   }
   
   function listenNotes(agent){
-    var noteUrl = agent.parameters.videoType;
+    var noteUrl = agent.parameters.noteType;
     var str = 'test'+noteUrl;
     var n = str.length;
     var noteName = str.charAt(n-2).toLowerCase();
     //agent.add("Okay,Try to listen carefully!");
-    var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+noteName+'&clef=treble&octave=4';
+    const notePictureUrl = _getNoteImageUrl(noteName);
     agent.add(new Card({
-        
 			  title: noteName,
               imageUrl: notePictureUrl,
               text: 'picture of '+noteName,
@@ -144,44 +161,50 @@ var userName='';
               buttonUrl: 'https://assistant.google.com/'
         
     }));
-    agent.add('<speak> Okay,Try to listen carefully! <audio src=' + noteUrl + '></audio></speak>');
+    agent.add('<speak> Okay, listen carefully! <audio src=' + noteUrl + '></audio></speak>');
     
   }
   
   function createComposition(agent){
     //add names in later
+    const conv = agent.conv();
     agent.add("Okay I am ready!");
     compose_1='';
     songPath='';
-    scenarioType=1;
+    scenarioType = 1;
+    console.log(`******************* scenarioType set to  ${scenarioType}...`);
+    //conv.user.storage.scenarioType = 1;
     agent.add("If you want to test your song,just say test it!");
   }
-  function finish(){
-  	scenarioType=0;
+  function finish(agent){
+  	scenarioType = 0;
     save=true;
     agent.add("Do you want to save it?"); // go to Yes/No intent
     //Do you want to listen it?  in later
     
   }
   function getNote(agent){
-    if(scenarioType==1){
+    const conv = agent.conv();
+    //const _scenarioType = conv.user.storage.scenarioType;
+    agent.add("scenario :" + scenarioType);
+    console.log(JSON.stringify(conv, null, 2));
+    if(scenarioType == 1){
     	var noteType = agent.parameters.noteType;
     	compose_1 = compose_1 + noteType;
     	//agent.add("compose_1 :"+compose_1);
     	//displayBoard(agent,compose_1);
-        var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+        //var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+        var notePictureUrl = _getNoteImageUrl(compose_1);
         agent.add(new Card({
-
             title: 'SongName',//compose
             imageUrl: notePictureUrl,
             text: 'Test',
             buttonText: 'TestButton',
             buttonUrl: 'https://assistant.google.com/'
-
         }));
     }
    
-    if(scenarioType==2){
+    if(scenarioType == 2){
     	displayBoard(agent,compose_1);
         //var counter=0;
         var noteType2 =""+ agent.parameters.noteType;
@@ -190,8 +213,10 @@ var userName='';
             //displayBoard(agent,compose_1);
             if(counter >= compose_1.length){
             	agent.add("Super, You completed the quiz!");
-                scenarioType=0;
-                counter=0;
+                scenarioType = 0;
+				console.log(`******************* scenarioType set to  ${scenarioType}...`);
+                //conv.user.storage.scenarioType = 0;
+                counter = 0;
             }else{
             	agent.add("Correct Choice,What is name of note: "+ (counter+1) );
             }
@@ -201,7 +226,7 @@ var userName='';
     }
   }
     
-  function createSongPath(agent,compose,songPath,tmp){
+  function createSongPath(agent, compose, songPath, tmp){
     var pianoNote = '"https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
     var pianoNote2= '4vH.wav"';
     songPath += '<audio src=' + pianoNote+ compose[tmp].toUpperCase() + pianoNote2+ '></audio>' ;
@@ -224,7 +249,7 @@ var userName='';
     var tmp=0;
     if(repeat == false && test == false ){
       for(var i = 0;i<compose.length;i++){
-        songPath = createSongPath(agent,compose,songPath,tmp);
+        songPath = createSongPath(agent, compose, songPath, tmp);
         tmp++;
       }
     }
@@ -233,21 +258,27 @@ var userName='';
   }
 
   function makeQuiz(agent){
-    scenarioType=2;
-    counter=0;
-    repeat=false;
+    const conv = agent.conv();
+    scenarioType = 2;
+    console.log(`******************* scenarioType set to  ${scenarioType}...`);
+    //conv.user.storage.scenarioType = 2;
+    counter = 0;
+    repeat = false;
     //var level = 1; // in later..
     compose_1 = '';
     agent.add("Pay attention here!");
-    for(var i = 0;i<level;i++)
+    for(var i = 0;i<level;i++) {
     	compose_1 = compose_1 + 'abcd';//random(agent);
+    }
     displayBoard(agent,compose_1);
     agent.add('<speak>'+songPath+'If you want to listen again,just say repeat.What is name of note:1'+'</speak>');
   }
   function testSong(agent){
+    const conv = agent.conv();
+    //const scenarioType = conv.user.storage.scenarioType;
         if(scenarioType==1){
         	test=true;
-            var notePictureUrl= 'http://localhost:5001/musicninja-25923/us-central1/app/api/note?note='+compose_1+'&clef=treble&octave=4';
+            var notePictureUrl= _getNoteImageUrl(compose_1);
             agent.add(new Card({
                 title: 'SongName',//compose
                 imageUrl: notePictureUrl,
@@ -260,11 +291,13 @@ var userName='';
             	songPath = createSongPath(agent,compose_1,songPath,tmp);
             	tmp++;
             }
-    		agent.add('<speak>'+songPath+'</speak>');
+    		agent.add(`<speak>${songPath}</speak>`);
     	}
   	test=false;
   }
   function listenAgain(agent){
+    const conv = agent.conv();
+    //const scenarioType = conv.user.storage.scenarioType;
     if(scenarioType == 2){
         repeat=true;
         displayBoard(agent,compose_1);
@@ -292,8 +325,10 @@ var userName='';
       save=false;
   } 
   function showTable(agent){
-  	agent.add("YK");
-    agent.add(new Table({
+    const conv = agent.conv();
+  	//agent.add("YK");
+    conv.ask("YK");
+    conv.ask(new Table({
   		dividers: true,
   		columns: ['header 1', 'header 2', 'header 3'],
         rows: [
@@ -311,7 +346,7 @@ var userName='';
         ],
 	})
     );
-    
+    agent.add(conv);
   }
 
   //var mediaDevices = navigator.mediaDevices;
@@ -332,86 +367,23 @@ var userName='';
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('random',random);
-  intentMap.set('Show Note',showNote);
-  intentMap.set('Listen Notes',listenNotes);
-  intentMap.set('Create Composition',createComposition);
-  intentMap.set('Create Composition/getNote',getNote);
-  intentMap.set('Make Quiz',makeQuiz);
-  intentMap.set('ListenAgain',listenAgain);
-  intentMap.set('Finish',finish);
-  intentMap.set('TestSong',testSong);
-  intentMap.set('Show MusicList',showTable);
-  intentMap.set('SaveMusic',addSong);
-  intentMap.set('Yes/No',answers);
-  intentMap.set('DeleteMusic',deleteSong);
-  intentMap.set('getUserName',getUserName);
+  intentMap.set('random', random);
+  intentMap.set('Show Note', showNote);
+  intentMap.set('Listen Notes', listenNotes);
+  intentMap.set('Create Composition', createComposition);
+  intentMap.set('Create Composition/getNote', getNote);
+  intentMap.set('Make Quiz', makeQuiz);
+  intentMap.set('ListenAgain', listenAgain);
+  intentMap.set('Finish', finish);
+  intentMap.set('TestSong', testSong);
+  intentMap.set('Show MusicList', showTable);
+  intentMap.set('SaveMusic', addSong);
+  intentMap.set('Yes/No', answers);
+  intentMap.set('DeleteMusic', deleteSong);
+  //intentMap.set('getUserName',getUserName);
   //intentMap.set('',handleSong);
   //intentMap.set('Make Quiz',recordAudio);
   agent.handleRequest(intentMap);
   
 });
 
-
-/*
-
-// Enter your calendar ID and service account JSON below.
-const calendarId = '<INSERT CALENDAR ID HERE>'; // Example: 6ujc6j6rgfk02cp02vg6h38cs0@group.calendar.google.com
-const serviceAccount = {}; // The JSON object looks like: { "type": "service_account", ... }
-
-// Set up Google Calendar service account credentials
-const serviceAccountAuth = new google.auth.JWT({
-  email: serviceAccount.client_email,
-  key: serviceAccount.private_key,
-  scopes: 'https://www.googleapis.com/auth/calendar'
-});
-
-const calendar = google.calendar('v3');
-process.env.DEBUG = 'dialogflow:*'; // It enables lib debugging statements
-
-const timeZone = 'America/Los_Angeles';  // Change it to your time zone
-const timeZoneOffset = '-07:00';         // Change it to your time zone offset
-
-function createCalendarEvent (dateTimeStart, dateTimeEnd) {
-  return new Promise((resolve, reject) => {
-    calendar.events.list({  // List all events in the specified time period
-      auth: serviceAccountAuth,
-      calendarId: calendarId,
-      timeMin: dateTimeStart.toISOString(),
-      timeMax: dateTimeEnd.toISOString()
-    }, (err, calendarResponse) => {
-      // Check if there exists any event on the calendar given the specified the time period
-      if (err || calendarResponse.data.items.length > 0) {
-        reject(err || new Error('Requested time conflicts with another appointment'));
-      } else {
-        // Create an event for the requested time period
-        calendar.events.insert({ auth: serviceAccountAuth,
-          calendarId: calendarId,
-          resource: {summary: 'Bike Appointment',
-            start: {dateTime: dateTimeStart},
-            end: {dateTime: dateTimeEnd}}
-        }, (err, event) => {
-          err ? reject(err) : resolve(event);
-        }
-        );
-      }
-    });
-  });
-}
-*/
-/*
-function makeAppointment (agent) {
-    // Use the Dialogflow's date and time parameters to create Javascript Date instances, 'dateTimeStart' and 'dateTimeEnd',
-    // which are used to specify the appointment's time.
-    const appointmentDuration = 1;// Define the length of the appointment to be one hour.
-    const dateTimeStart = convertParametersDate(agent.parameters.date, agent.parameters.time);
-    const dateTimeEnd = addHours(dateTimeStart, appointmentDuration);
-    const appointmentTimeString = getLocaleTimeString(dateTimeStart);
-    const appointmentDateString = getLocaleDateString(dateTimeStart);
-    // Check the availability of the time slot and set up an appointment if the time slot is available on the calendar
-    return createCalendarEvent(dateTimeStart, dateTimeEnd).then(() => {
-      agent.add(`Got it. I have your appointment scheduled on ${appointmentDateString} at ${appointmentTimeString}. See you soon. Good-bye.`);
-    }).catch(() => {
-      agent.add(`Sorry, we're booked on ${appointmentDateString} at ${appointmentTimeString}. Is there anything else I can do for you?`);
-    });
-  }*/
