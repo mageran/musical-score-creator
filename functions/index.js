@@ -40,7 +40,7 @@ app.get('/api/note', (req, res) => {
   // Create a stave of width 400 at position x10, y40 on the canvas.
   var staves = new Array(5);
   var counter=10;
-  for(var i=0;i<2;i++){
+  for(var i=0;i<1;i++){
 	staves[i] = new VF.Stave(10, counter, w - 20);
 	staves[i].addClef(clef);
 	staves[i].setContext(context).draw();
