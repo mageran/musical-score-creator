@@ -50,6 +50,11 @@ void setup() {
 int i = 0;
 char userInput ="a";
 void loop(i<compose.length()) {
+
+  if (mySerial.available())
+    Serial.write(mySerial.read());
+  if (Serial.available())
+    mySerial.write(Serial.read());
   // put your main code here, to run repeatedly:
   sensorValue1 = digitalRead(sensor1);
   sensorValue2 = digitalRead(sensor2);
