@@ -127,6 +127,9 @@ class Fulfillment {
              + this._getSongAudioSsml(conv.data.currentSongNotes, false)
              + 'Do you want to save this song? If yes, just say <break time="0.5s"/>"save as" and then some name; otherwise just say no.'
              + "</speak>");
+    const text = "Your current song";
+    const image = this._getNotesImageForSongNotes(conv.data.currentSongNotes, text);
+    conv.ask(new BasicCard({ text, image }))
     conv.ask(new Suggestions(['No', 'Save']));
   }
 
@@ -150,8 +153,8 @@ class Fulfillment {
   }
 
   [Intents.saveSongNo](conv) {
-    const text = "Ok, I won't save this composition.";
-      + "say \"Main Menu\" to go back";
+    const text = "Ok, I won't save this composition. "
+          + "say \"Main Menu\" to go back";
     conv.ask(text);
     conv.ask(new Suggestions(['Main Menu']));
   }
