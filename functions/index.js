@@ -23,7 +23,7 @@ app.get('/api/note', (req, res) => {
   renderer.resize(width, height);
   var context = renderer.getContext();
   context.scale(scaleFactor, scaleFactor);
-  context.fillStyle = 'white';
+  context.fillStyle = 'red';
   context.fillRect(0, 0, w, h);
   context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
   context.fillStyle = 'black';
@@ -44,7 +44,7 @@ app.get('/api/note', (req, res) => {
 	staves[i] = new VF.Stave(10, counter, w - 20);
 	staves[i].addClef(clef);
 	staves[i].setContext(context).draw();
-	counter += 100;
+	counter += 100;+
   }
 
   // Add a clef and time signature.
@@ -78,9 +78,20 @@ app.get('/api/note', (req, res) => {
     */
     
     var octaveNum = Number.parseInt(octave);
+    var octaves="";
+    var temp="";
+    for(int i = 0;i<note.length;i++){
+	if(i%2==1)
+		octaves.concat(note[i]);
+	else
+		temp.concat(note[i]);
+    }
+    note=temp;
+    int i =-1;
     const notes = note.split('').map(n => {
       const keys = [`${n.toLowerCase()}/${octaveNum}`];
-      return new VF.StaveNote({clef, keys, duration: "4" });
+      i++;
+      return new VF.StaveNote({clef, keys, duration: ${octaves.charAr(i)} });
     });
     
     // Create a voice in 4/4 and add above notes
