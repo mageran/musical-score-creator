@@ -3,7 +3,7 @@
 const { dialogflow, Suggestions, BasicCard, Image, SimpleResponse } = require('actions-on-google');
 const functions = require('firebase-functions');
 
-const { Intents, Contexts, NoteNames } = require('./config');
+const { Intents, Contexts, NoteNames, NoteLengths, FullNoteLengthInSeconds, QuizSettings } = require('./config');
 
 const { Database, SongDatabase } = require('./database');
 
@@ -47,6 +47,16 @@ class Fulfillment {
     }, "")
   }
 
+  _noteLengthToNumber(noteLength) {
+    switch(noteLength) {
+    case 'full': return 1;
+    case 'half': return 2;
+    case 'quarter': return 4;
+    case 'eights': return 8;
+    default: return 4;
+    }
+  }
+
   _getNotesImageForSongNotes(notesList, alt) {
     const notesString = notesList.map(n => n.toLowerCase()).join('');
     const url = this.getNotesImageUrl(notesString);
@@ -54,21 +64,28 @@ class Fulfillment {
   }
 
   _getSongAudioSsml(notesList, surroundWithSpeak = true) {
-    const urlForNote = note => {
-      let noteUC = note.toUpperCase();
+    const urlAndTimeForNote = note => {
+      let [ noteUC, nlen ] = note.toUpperCase().split('');
+      nlen = Number(nlen);
+      if (isNaN(nlen) || nlen === 0) nlen = 4; 
       // substitute missing notes:
       if (noteUC === 'E') noteUC = 'D';
       if (noteUC === 'G') noteUC = 'F';
       const urlprefix = 'https://storage.googleapis.com/musicninja-25923.appspot.com/PianoNotes/';
-      return `${urlprefix}${noteUC}4vH.wav`
+      const url = `${urlprefix}${noteUC}4vH.wav`;
+      const time = FullNoteLengthInSeconds/nlen;
+      console.log(`note ${note}: ${noteUC}, time: ${time}`);
+      return { url, time };
     }
     const ssmlElements = []
     if (surroundWithSpeak) ssmlElements.push("<speak>");
     for(let i = 0; i < notesList.length; i++) {
       let note = notesList[i];
-      let time = (i === notesList.length - 1) ? "3.0" : "1.5";
-      ssmlElements.push(`<audio src="${urlForNote(note)}" clipEnd="${time}s"></audio>`)
+      let { url, time } = urlAndTimeForNote(note)
+      //let time = (i === notesList.length - 1) ? "3.0" : "1.5";
+      ssmlElements.push(`<audio src="${url}" clipEnd="${time}s"></audio>`)
     }
+    ssmlElements.push('<break time="1s"/>');
     if (surroundWithSpeak) ssmlElements.push("</speak>");
     return ssmlElements.join('\n');
   }
@@ -85,9 +102,10 @@ class Fulfillment {
       conv.ask("Hello, I'm your Music Ninja!");
     }
     //conv.ask("You can create a song or take a notes quiz. What do you want to do?");
-    conv.ask("You can create a song or list your saved songs. What do you want to do?");
+    conv.ask("You can create a song, take a notes quiz, or list your saved songs. What do you want to do?");
     conv.ask(new Suggestions([
       'Create a song',
+      'Take a quiz',
       'List saved songs'
     ]));
   }
@@ -96,15 +114,100 @@ class Fulfillment {
     console.log(`create song: context: ${this.getActiveContext(conv)}`);
     conv.data.currentSongNotes = [];
     conv.ask("Ok, let's create a song!");
-    conv.ask('Just say one note at a time, for example "note D". When you are done, just say "done".');
+    conv.ask('Just say one note at a time, for example "note E". When you are done, just say "done".');
     conv.ask(new Suggestions(NoteNames));
   }
 
-  [Intents.takeQuiz](conv) {
-    console.log(`take quiz: context: ${this.getActiveContext(conv)}`);
-    conv.close("Ok, let's take a quiz!");
+  _resetQuiz(conv) {
+    conv.data.quiz = {
+      noteHistory: [],
+      questionCounter: 0,
+      correct: 0
+    }
   }
 
+  _getRandomNote(conv) {
+    let note;
+    do {
+      let index = Math.trunc(Math.random() * NoteNames.length);
+      note = NoteNames[index].toLowerCase();
+    } while (conv.data.quiz.noteHistory.includes(note));
+    conv.data.quiz.noteHistory.push(note);
+    conv.data.quiz.questionCounter++;
+    return note;
+  }
+
+  _getRandomPrompt(isCorrect, note) {
+    const prompts = isCorrect ? QuizSettings.correctAnswerPrompts : QuizSettings.wrongAnswerPrompts;
+    const index = Math.trunc(Math.random() * prompts.length);
+    var prompt = prompts[index];
+    if (!isCorrect) {
+      prompt = prompt.replace(/NOTE/g, note);
+    }
+    return prompt;
+  }
+
+  _getCurrentQuizNote(conv) {
+    return conv.data.quiz.noteHistory[conv.data.quiz.noteHistory.length - 1];
+  }
+
+  _nextQuizQuestion(conv, ssmlIn = [], isFirst = false) {
+    var ssml = ssmlIn.slice();
+    if (isFirst) {
+      ssml.push("Ok, let's take a notes quiz!");
+      ssml.push('<break time="0.5s"/>');
+      ssml.push(`I ask you to name ${QuizSettings.numberOfQuestions} note, one by one.`);
+    }
+    const note = this._getRandomNote(conv);
+    const noteAudio = [note + '1'];
+    const noteDisplay = [note + '2'];
+    const andFinal = conv.data.quiz.questionCounter >= QuizSettings.numberOfQuestions ? ' and final' : '';
+    ssml.push(`Here is your <say-as interpret-as="ordinal">${conv.data.quiz.questionCounter}</say-as>${andFinal} note:`);
+    ssml.push('<break time="0.5s"/>');
+    ssml.push(this._getSongAudioSsml(noteAudio, false));
+    
+    conv.ask(`<speak>${ssml.join('\n')}</speak>`);
+    const text = "Name that note";
+    const image = this._getNotesImageForSongNotes(noteDisplay, text);
+    conv.ask(new BasicCard({ text, image }))
+    conv.ask(new Suggestions(NoteNames));    
+  }
+
+  _getQuizResultPrompt(conv) {
+    const total = QuizSettings.numberOfQuestions;
+    const count = conv.data.quiz.correct;
+    const pkey = count === 0 ? 'none' : count < total ? 'some' : 'all';
+    const prompts = QuizSettings[`${pkey}CorrectPrompts`];
+    var prompt = prompts[Math.trunc(Math.random() * prompts.length)];
+    prompt = prompt.replace(/COUNT/g, count);
+    prompt = prompt.replace(/TOTAL/g, total);
+    return prompt;
+  }
+  
+  [Intents.takeQuiz](conv) {
+    console.log(`take quiz: context: ${this.getActiveContext(conv)}`);
+    this._resetQuiz(conv);
+    this._nextQuizQuestion(conv, [], true);
+  }
+
+  [Intents.noteNameInQuiz](conv, { noteName }) {
+    const note = this._getCurrentQuizNote(conv);
+    const isCorrect = (typeof noteName === 'string') && noteName === note;
+    const ssml = []
+    ssml.push(this._getRandomPrompt(isCorrect, note));
+    conv.data.quiz.correct += isCorrect ? 1 : 0;
+    if (conv.data.quiz.questionCounter >= QuizSettings.numberOfQuestions) {
+      ssml.push(this._getQuizResultPrompt(conv));
+      ssml.push('<break time="1.5s"/>');
+      conv.ask(`<speak>${ssml.join('\n')}</speak>`);
+      const text = "Say \"Main Menu\" to go back";
+      conv.ask(text);
+      conv.ask(new Suggestions(['Main Menu']));
+    } else {
+      this._nextQuizQuestion(conv, ssml, false);
+    }
+  }
+  
   [Intents.noteName](conv, { noteName }) {
     console.log(`note name: context: ${this.getActiveContext(conv)}`);
     conv.data.currentSongNotes.push(noteName);
@@ -113,10 +216,31 @@ class Fulfillment {
     conv.ask(`<speak>
       ok, I added note ${noteName.toUpperCase()}.
       <break time="1s"/>
-      Next note, or say "done", please?
+      If you want to change the length of this note, say "full, half, quarter, or eight";
+      Otherwise, just say the next note, or "done".
       </speak>`);
     conv.ask(new BasicCard({ text, image }))
-    conv.ask(new Suggestions([...NoteNames, "done"]));
+    conv.ask(new Suggestions([...NoteLengths, "done"]));
+  }
+
+  [Intents.noteLength](conv, { noteLength }) {
+    const lastNote = conv.data.currentSongNotes.splice(conv.data.currentSongNotes.length - 1, 1);
+    if (!lastNote || lastNote.length === 0) {
+      conv.ask('Please say a note name first, or say "done".');
+      conv.ask(new Suggestions([...NoteNames, "done"]));
+    } else {
+      const noteNameAndLength = `${lastNote[0]}${this._noteLengthToNumber(noteLength)}`;
+      conv.data.currentSongNotes.push(noteNameAndLength);
+      const text = "Your current song notes";
+      const image = this._getNotesImageForSongNotes(conv.data.currentSongNotes, text);
+      conv.ask(`<speak>
+        ok, I changed the note's length to ${noteLength}.
+        <break time="1s"/>
+        Next note, or "done", please
+        </speak>`);
+      conv.ask(new BasicCard({ text, image }))
+      conv.ask(new Suggestions([...NoteNames, "done"]));
+    }
   }
 
   [Intents.doneCreateContext](conv) {
@@ -154,7 +278,7 @@ class Fulfillment {
 
   [Intents.saveSongNo](conv) {
     const text = "Ok, I won't save this composition. "
-          + "say \"Main Menu\" to go back";
+          + "Say \"Main Menu\" to go back";
     conv.ask(text);
     conv.ask(new Suggestions(['Main Menu']));
   }
@@ -184,7 +308,6 @@ class Fulfillment {
       conv.ask(new Suggestions(['Main Menu']));
     } else {
       const songInfo = conv.data.currentSongInfo;
-      conv.close(`deleting song "${songInfo.songName}"...`);
       return this.db.deleteSong(songInfo.songName)
         .then(() => {
           conv.ask("<speak>"
